@@ -53,29 +53,49 @@
   <script>
     const noBtn = document.getElementById("noBtn");
 
-    // initial position
-    noBtn.style.left = "50%";
-    noBtn.style.top = "50%";
+  // starting position (center-ish)
+  let x = window.innerWidth / 2;
+  let y = window.innerHeight / 2;
 
-    noBtn.addEventListener("mouseenter", moveButton);
+  noBtn.style.left = x + "px";
+  noBtn.style.top = y + "px";
 
-    function moveButton() {
-      const padding = 20;
+  function hop() {
+    const step = 100; // how far it moves each time
+    const directions = [
+      { dx: step, dy: 0 },   // right
+      { dx: -step, dy: 0 },  // left
+      { dx: 0, dy: step },   // down
+      { dx: 0, dy: -step }   // up
+    ];
 
-      const maxX = window.innerWidth - noBtn.offsetWidth - padding;
-      const maxY = window.innerHeight - noBtn.offsetHeight - padding;
+    const move = directions[Math.floor(Math.random() * directions.length)];
 
-      const randomX = Math.random() * maxX;
-      const randomY = Math.random() * maxY;
+    x += move.dx;
+    y += move.dy;
 
-      noBtn.style.left = randomX + "px";
-      noBtn.style.top = randomY + "px";
-    }
+    // keep it on screen
+    const padding = 10;
+    const maxX = window.innerWidth - noBtn.offsetWidth - padding;
+    const maxY = window.innerHeight - noBtn.offsetHeight - padding;
 
-    function yesClicked() {
-      document.getElementById("flowers").style.display = "block";
-      noBtn.style.display = "none";
-    }
+    x = Math.max(padding, Math.min(x, maxX));
+    y = Math.max(padding, Math.min(y, maxY));
+
+    noBtn.style.left = x + "px";
+    noBtn.style.top = y + "px";
+  }
+
+  // desktop
+  noBtn.addEventListener("mouseenter", hop);
+
+  // mobile
+  noBtn.addEventListener("touchstart", hop);
+
+  function yesClicked() {
+    document.getElementById("flowers").style.display = "block";
+    noBtn.style.display = "none";
+  }
   </script>
 
 </body>
