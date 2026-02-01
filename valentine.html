@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Valentine?</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #fff0f5;
+      text-align: center;
+      padding-top: 80px;
+    }
+    h1 {
+      font-size: 2.5em;
+    }
+    button {
+      font-size: 1.2em;
+      padding: 12px 25px;
+      margin: 15px;
+      cursor: pointer;
+    }
+    #flowers {
+      display: none;
+      font-size: 2em;
+      margin-top: 30px;
+    }
+    #tryAgain {
+      display: none;
+      color: red;
+      margin-top: 20px;
+      font-size: 1.2em;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Will you be my Valentine? 💖</h1>
+
+  <button onclick="yesClicked()">Yes</button>
+  <button onclick="noClicked()">No</button>
+
+  <div id="flowers">
+    🌹🌷🌸🌺💐  
+    <p>You made my day ❤️</p>
+  </div>
+
+  <div id="tryAgain">
+    Try again! 😄
+  </div>
+
+  <script>
+    function yesClicked() {
+      document.getElementById("flowers").style.display = "block";
+      document.getElementById("tryAgain").style.display = "none";
+    }
+
+    function noClicked() {
+      document.getElementById("tryAgain").style.display = "block";
+      document.getElementById("flowers").style.display = "none";
+    }
+  </script>
+
+</body>
+</html>
