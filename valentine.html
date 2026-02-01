@@ -9,26 +9,32 @@
       background: #fff0f5;
       text-align: center;
       padding-top: 80px;
+      height: 100vh;
+      overflow: hidden;
     }
+
     h1 {
       font-size: 2.5em;
     }
+
     button {
       font-size: 1.2em;
       padding: 12px 25px;
-      margin: 15px;
       cursor: pointer;
     }
+
+    #yesBtn {
+      margin: 20px;
+    }
+
+    #noBtn {
+      position: absolute;
+    }
+
     #flowers {
       display: none;
       font-size: 2em;
       margin-top: 30px;
-    }
-    #tryAgain {
-      display: none;
-      color: red;
-      margin-top: 20px;
-      font-size: 1.2em;
     }
   </style>
 </head>
@@ -36,29 +42,42 @@
 
   <h1>Will you be my Valentine? 💖</h1>
 
-  <button onclick="yesClicked()">Yes</button>
-  <button onclick="noClicked()">No</button>
+  <button id="yesBtn" onclick="yesClicked()">Yes</button>
+  <button id="noBtn">No</button>
 
   <div id="flowers">
     🌹🌷🌸🌺💐  
     <p>You made my day ❤️</p>
   </div>
 
-  <div id="tryAgain">
-    Try again! 😄
-  </div>
-
   <script>
-    function yesClicked() {
-      document.getElementById("flowers").style.display = "block";
-      document.getElementById("tryAgain").style.display = "none";
+    const noBtn = document.getElementById("noBtn");
+
+    // initial position
+    noBtn.style.left = "50%";
+    noBtn.style.top = "50%";
+
+    noBtn.addEventListener("mouseenter", moveButton);
+
+    function moveButton() {
+      const padding = 20;
+
+      const maxX = window.innerWidth - noBtn.offsetWidth - padding;
+      const maxY = window.innerHeight - noBtn.offsetHeight - padding;
+
+      const randomX = Math.random() * maxX;
+      const randomY = Math.random() * maxY;
+
+      noBtn.style.left = randomX + "px";
+      noBtn.style.top = randomY + "px";
     }
 
-    function noClicked() {
-      document.getElementById("tryAgain").style.display = "block";
-      document.getElementById("flowers").style.display = "none";
+    function yesClicked() {
+      document.getElementById("flowers").style.display = "block";
+      noBtn.style.display = "none";
     }
   </script>
 
 </body>
 </html>
+
