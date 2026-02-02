@@ -167,14 +167,37 @@ enterBtn.addEventListener("click", () => {
 // === NO BUTTON HOP ===
 noBtn.addEventListener("mouseenter", hop);
 noBtn.addEventListener("touchstart", hop);
-function hop(){
-  const dx = Math.random()*200-100;
-  const dy = Math.random()*50-25;
-  noBtn.style.transform = `translate(${dx}px, ${dy}px)`;
+function hop() {
+  const padding = 10; // margin from edges
+  const maxX = window.innerWidth - noBtn.offsetWidth - padding;
+  const maxY = window.innerHeight - noBtn.offsetHeight - padding;
 
-  song2.pause(); song3.pause();
-  song1.currentTime=0; song1.play();
+  // Get Yes button bounds
+  const yesRect = yesBtn.getBoundingClientRect();
+
+  let x, y, tries = 0;
+  do {
+    x = Math.random() * maxX;
+    y = Math.random() * maxY;
+    tries++;
+    // break after too many tries to avoid infinite loop
+    if (tries > 100) break;
+  } while (
+    x < yesRect.right + 10 && 
+    x + noBtn.offsetWidth > yesRect.left - 10 &&
+    y < yesRect.bottom + 10 &&
+    y + noBtn.offsetHeight > yesRect.top - 10
+  );
+
+  noBtn.style.transform = `translate(${x}px, ${y}px)`;
+
+  // Play song1 when No is hovered
+  song2.pause();
+  song3.pause();
+  song1.currentTime = 0;
+  song1.play();
 }
+
 
 // === YES BUTTON ===
 yesBtn.addEventListener("click", () => {
