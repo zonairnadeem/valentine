@@ -80,8 +80,9 @@ html, body { height:100%; width:100%; overflow:hidden; background:#fff0f6; }
   border:none;
   border-radius:50px;
   cursor:pointer;
-  position:absolute;
-  display:none; /* hidden until Enter clicked */
+  position:absolute;  /* always absolute relative to body */
+  display:none;       /* hidden until Enter clicked */
+  z-index:4;
 }
 
 /* Celebration page */
@@ -149,7 +150,7 @@ const song1 = document.getElementById("song1");
 const song2 = document.getElementById("song2");
 const song3 = document.getElementById("song3");
 
-const images = ['img1.jpeg','img2.jpeg','img3.jpeg','img4.jpeg','img5.jpeg','img6.jpeg','img7.jpeg','img8.jpeg','img9.jpeg','img10.jpeg','img11.jpeg','img12.jpeg'];
+const images = ['img1.jpg','img2.jpg','img3.jpg','img4.jpg','img5.jpg','img6.jpg','img7.jpg','img8.jpg','img9.jpg','img10.jpg'];
 let current = 0;
 
 // --- ENTER BUTTON ---
@@ -157,8 +158,9 @@ enterBtn.addEventListener("click", () => {
   splash.style.display = "none";
   card.style.display = "flex";
 
-  noBtn.style.display = "block"; // show No button
-  // set initial No position near Yes
+  // Show No button and position relative to viewport
+  noBtn.style.display = "block";
+  noBtn.style.position = "absolute";
   const yesRect = yesBtn.getBoundingClientRect();
   noBtn.style.left = yesRect.right + 20 + "px";
   noBtn.style.top = yesRect.top + "px";
@@ -192,7 +194,6 @@ function hop() {
     y + noBtn.offsetHeight > yesRect.top - 10
   );
 
-  noBtn.style.position="absolute";
   noBtn.style.left = x + "px";
   noBtn.style.top = y + "px";
 
