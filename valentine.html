@@ -5,13 +5,22 @@
   <title>Valentine?</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background: #fff0f5;
-      text-align: center;
-      padding-top: 80px;
-      height: 100vh;
-      overflow: hidden;
-    }
+  font-family: Arial, sans-serif;
+  background-color: #fff0f5;
+  text-align: center;
+  padding-top: 80px;
+  min-height: 100vh;
+  margin: 0;
+  overflow: hidden;
+  transition: background-image 0.4s ease;
+}
+
+body.bg {
+  background-image: url("AU208731.JPG"); /* or images/valentine.jpg */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
 
     h1 {
       font-size: 2.5em;
@@ -36,17 +45,12 @@
       font-size: 2em;
       margin-top: 30px;
 
-      body.bg {
-        background-image: url("AU208731.JPG");
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
-      }
+
     }
   </style>
 </head>
 <body>
-  <h1>Version 1.4? 💖</h1>
+  <h1>Version 1.5? 💖</h1>
   <h1>Will you be my Valentine? 💖</h1>
 
   <button id="yesBtn" onclick="yesClicked()">Yes</button>
@@ -100,7 +104,11 @@
   noBtn.addEventListener("touchstart", hop);
 
   function yesClicked() {
-    document.body.classList.add("bg");
+    document.body.style.backgroundImage = "url('valentine.jpg')";
+    document.body.style.backgroundSize = "cover";
+    document.body.style.backgroundPosition = "center";
+    document.body.style.backgroundRepeat = "no-repeat";
+
     document.getElementById("flowers").style.display = "block";
     document.getElementById("noBtn").style.display = "none";
   }
