@@ -3,119 +3,163 @@
 <head>
 <meta charset="UTF-8">
 <title>A Little Surprise 💖</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-  * {
-    box-sizing: border-box;
-    font-family: "Poppins", Arial, sans-serif;
-  }
+* {
+  box-sizing: border-box;
+  font-family: "Poppins", Arial, sans-serif;
+}
 
-  body {
-    margin: 0;
-    height: 100vh;
-    background: radial-gradient(circle at top, #ff9acb, #2b0a3d);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-    color: white;
-  }
+body {
+  margin: 0;
+  height: 100vh;
+  background: radial-gradient(circle at top, #ff9acb, #2b0a3d);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  color: white;
+}
 
-  .screen {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    opacity: 0;
-    pointer-events: none;
-    transform: scale(0.98);
-    transition: opacity 0.6s ease, transform 0.6s ease;
-  }
+.screen {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  opacity: 0;
+  pointer-events: none;
+  transform: scale(0.98);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
 
-  .screen.active {
-    opacity: 1;
-    pointer-events: auto;
-    transform: scale(1);
-  }
+.screen.active {
+  opacity: 1;
+  pointer-events: auto;
+  transform: scale(1);
+}
 
-  h1 {
-    font-size: 2.4rem;
-    margin-bottom: 30px;
-    text-shadow: 0 6px 20px rgba(0,0,0,0.4);
-  }
+h1 {
+  font-size: clamp(1.8rem, 5vw, 2.6rem);
+  margin-bottom: 30px;
+  padding: 0 20px;
+  text-shadow: 0 6px 20px rgba(0,0,0,0.4);
+}
 
-  button {
-    padding: 14px 34px;
-    font-size: 18px;
-    border: none;
-    border-radius: 999px;
-    cursor: pointer;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-  }
+button {
+  padding: 14px 36px;
+  font-size: 18px;
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  touch-action: manipulation;
+}
 
-  button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 10px 25px rgba(0,0,0,0.25);
-  }
+button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+}
 
-  #enterBtn {
-    background: linear-gradient(135deg, #ff5fa2, #ff8ac7);
-    color: white;
-  }
+#enterBtn {
+  background: linear-gradient(135deg, #ff5fa2, #ff8ac7);
+  color: white;
+}
 
-  #buttons {
-    margin-top: 30px;
-    position: relative;
-  }
+#buttons {
+  margin-top: 30px;
+  position: relative;
+}
 
-  #yesBtn {
-    background: linear-gradient(135deg, #4CAF50, #6be27a);
-    color: white;
-    margin-right: 40px;
-  }
+#yesBtn {
+  background: linear-gradient(135deg, #4CAF50, #6be27a);
+  color: white;
+  margin-right: 40px;
+}
 
-  #noBtn {
-    background: linear-gradient(135deg, #e74c3c, #ff6b5a);
-    color: white;
-    position: relative;
-  }
+#noBtn {
+  background: linear-gradient(135deg, #e74c3c, #ff6b5a);
+  color: white;
+  position: relative;
+}
 
-  #slideshow {
-    position: absolute;
-    inset: 0;
-    background-size: cover;
-    background-position: center;
-    opacity: 1;
-    transition: opacity 0.8s ease-in-out;
-  }
+#slideshow {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  transition: opacity 0.8s ease-in-out;
+}
 
-  /* soft vignette */
-  #slideshow::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(circle, transparent 60%, rgba(0,0,0,0.4));
-  }
+#slideshow::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle, transparent 60%, rgba(0,0,0,0.45));
+}
+
+/* Floating hearts */
+.heart {
+  position: absolute;
+  bottom: -30px;
+  font-size: 24px;
+  animation: floatUp 8s linear infinite;
+  opacity: 0.8;
+}
+
+@keyframes floatUp {
+  0% { transform: translateY(0) scale(1); opacity: 0; }
+  10% { opacity: 1; }
+  100% { transform: translateY(-110vh) scale(1.5); opacity: 0; }
+}
+
+/* Preloader */
+#loader {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle, #ff9acb, #2b0a3d);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+
+.spinner {
+  width: 60px;
+  height: 60px;
+  border: 6px solid rgba(255,255,255,0.3);
+  border-top: 6px solid white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
 </style>
 </head>
 
 <body>
+
+<!-- LOADER -->
+<div id="loader">
+  <div class="spinner"></div>
+</div>
 
 <!-- AUDIO -->
 <audio id="song1" src="song1.mp3"></audio>
 <audio id="song2" src="song2.mp3" loop></audio>
 <audio id="song3" src="song3.mp3" loop></audio>
 
-<!-- SCREEN 1 -->
+<!-- SCREENS -->
 <div id="screen1" class="screen active">
   <h1>A little surprise for someone special… 💖</h1>
   <button id="enterBtn">ENTER</button>
 </div>
 
-<!-- SCREEN 2 -->
 <div id="screen2" class="screen">
   <h1>Will you be my Valentine? 💘</h1>
   <div id="buttons">
@@ -124,77 +168,123 @@
   </div>
 </div>
 
-<!-- SCREEN 3 -->
 <div id="screen3" class="screen">
   <div id="slideshow"></div>
 </div>
 
+<canvas id="confetti"></canvas>
+
 <script>
-  const screen1 = document.getElementById("screen1");
-  const screen2 = document.getElementById("screen2");
-  const screen3 = document.getElementById("screen3");
+const screen1 = document.getElementById("screen1");
+const screen2 = document.getElementById("screen2");
+const screen3 = document.getElementById("screen3");
 
-  const enterBtn = document.getElementById("enterBtn");
-  const yesBtn = document.getElementById("yesBtn");
-  const noBtn = document.getElementById("noBtn");
+const enterBtn = document.getElementById("enterBtn");
+const yesBtn = document.getElementById("yesBtn");
+const noBtn = document.getElementById("noBtn");
 
-  const song1 = document.getElementById("song1");
-  const song2 = document.getElementById("song2");
-  const song3 = document.getElementById("song3");
+const song1 = document.getElementById("song1");
+const song2 = document.getElementById("song2");
+const song3 = document.getElementById("song3");
 
-  const slideshow = document.getElementById("slideshow");
+const slideshow = document.getElementById("slideshow");
+const loader = document.getElementById("loader");
 
-  function showScreen(from, to) {
-    from.classList.remove("active");
-    to.classList.add("active");
+const images = Array.from({length:10},(_,i)=>`images/slide${i+1}.jpg`);
+let loaded = 0;
+
+// PRELOAD
+images.forEach(src=>{
+  const img=new Image();
+  img.onload=()=>{ if(++loaded===images.length) loader.style.display="none"; };
+  img.src=src;
+});
+
+function show(from,to){
+  from.classList.remove("active");
+  to.classList.add("active");
+}
+
+enterBtn.onclick=()=>{
+  show(screen1,screen2);
+  song2.volume=0.6;
+  song2.play();
+};
+
+noBtn.onmouseenter=noBtn.ontouchstart=()=>{
+  song1.currentTime=0;
+  song1.play();
+  noBtn.style.transform=`translate(${Math.random()*160-80}px,${Math.random()*100-50}px)`;
+};
+
+yesBtn.onclick=()=>{
+  show(screen2,screen3);
+  song2.pause();
+  song3.play();
+  confettiBurst();
+  startSlideshow();
+  startHearts();
+};
+
+let i=0;
+function startSlideshow(){
+  slideshow.style.backgroundImage=`url(${images[i]})`;
+  setInterval(()=>{
+    slideshow.style.opacity=0;
+    setTimeout(()=>{
+      i=(i+1)%images.length;
+      slideshow.style.backgroundImage=`url(${images[i]})`;
+      slideshow.style.opacity=1;
+    },800);
+  },3000);
+}
+
+// HEARTS
+function startHearts(){
+  setInterval(()=>{
+    const h=document.createElement("div");
+    h.className="heart";
+    h.textContent="💖";
+    h.style.left=Math.random()*100+"vw";
+    h.style.fontSize=20+Math.random()*20+"px";
+    document.body.appendChild(h);
+    setTimeout(()=>h.remove(),8000);
+  },400);
+}
+
+// CONFETTI
+const canvas=document.getElementById("confetti");
+const ctx=canvas.getContext("2d");
+canvas.width=innerWidth;
+canvas.height=innerHeight;
+
+function confettiBurst(){
+  const pieces=200;
+  const conf=[];
+  for(let i=0;i<pieces;i++){
+    conf.push({
+      x:canvas.width/2,
+      y:canvas.height/2,
+      r:Math.random()*6+4,
+      dx:(Math.random()-0.5)*10,
+      dy:(Math.random()-0.5)*10,
+      life:100
+    });
   }
-
-  enterBtn.onclick = () => {
-    showScreen(screen1, screen2);
-    song2.volume = 0.6;
-    song2.play();
-  };
-
-  noBtn.onmouseenter = () => {
-    song1.currentTime = 0;
-    song1.play();
-
-    const maxX = 200;
-    const maxY = 120;
-
-    const x = Math.random() * maxX - maxX / 2;
-    const y = Math.random() * maxY - maxY / 2;
-
-    noBtn.style.transform = `translate(${x}px, ${y}px)`;
-  };
-
-  yesBtn.onclick = () => {
-    showScreen(screen2, screen3);
-
-    song2.pause();
-    song3.volume = 0.7;
-    song3.play();
-
-    startSlideshow();
-  };
-
-  const images = [ 'img1.jpeg','img2.jpeg','img3.jpeg','img4.jpeg','img5.jpeg','img6.jpeg','img7.jpeg','img8.jpeg','img9.jpeg','img10.jpeg','img11.jpeg','img12.jpeg' ];
-
-  let index = 0;
-
-  function startSlideshow() {
-    slideshow.style.backgroundImage = `url(${images[index]})`;
-
-    setInterval(() => {
-      slideshow.style.opacity = 0;
-
-      setTimeout(() => {
-        index = (index + 1) % images.length;
-        slideshow.style.backgroundImage = `url(${images[index]})`;
-        slideshow.style.opacity = 1;
-      }, 800);
-    }, 3000);
-  }
+  (function animate(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    conf.forEach(p=>{
+      p.x+=p.dx;
+      p.y+=p.dy;
+      p.life--;
+      ctx.fillStyle=`hsl(${Math.random()*360},100%,60%)`;
+      ctx.beginPath();
+      ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fill();
+    });
+    if(conf.some(p=>p.life>0)) requestAnimationFrame(animate);
+  })();
+}
 </script>
 
 </body>
