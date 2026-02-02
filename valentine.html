@@ -61,6 +61,8 @@ html, body { height:100%; width:100%; overflow:hidden; background:#fff0f6; }
   z-index:2;
 }
 #card h1 { font-size:2.4rem; margin-bottom:36px; color:#1f1f1f; }
+
+/* Yes button */
 #yesBtn {
   padding:16px 50px;
   background: linear-gradient(135deg,#ff5c8a,#ff2e63);
@@ -70,7 +72,7 @@ html, body { height:100%; width:100%; overflow:hidden; background:#fff0f6; }
   cursor:pointer;
   box-shadow:0 18px 40px rgba(255,92,138,0.45);
   position:relative;
-  z-index:2;
+  z-index:6; /* higher than No button to be clickable */
 }
 #yesBtn:hover { transform:translateY(-2px); box-shadow:0 24px 55px rgba(255,92,138,0.6); }
 
@@ -84,7 +86,7 @@ html, body { height:100%; width:100%; overflow:hidden; background:#fff0f6; }
   cursor:pointer;
   position:absolute;  /* relative to body */
   display:none;       /* show after Enter clicked */
-  z-index:5;
+  z-index:5;          /* slightly lower than Yes button */
 }
 
 /* Celebration page */
@@ -152,7 +154,7 @@ const song1 = document.getElementById("song1");
 const song2 = document.getElementById("song2");
 const song3 = document.getElementById("song3");
 
-const images = ['img1.jpeg','img2.jpeg','img3.jpeg','img4.jpeg','img5.jpeg','img6.jpeg','img7.jpeg','img8.jpeg','img9.jpeg','img10.jpeg','img11.jpeg','img12.jpeg'];
+const images = ['img1.jpg','img2.jpg','img3.jpg','img4.jpg','img5.jpg','img6.jpg','img7.jpg','img8.jpg','img9.jpg','img10.jpg'];
 let current = 0;
 
 // --- ENTER BUTTON ---
@@ -164,7 +166,7 @@ enterBtn.addEventListener("click", () => {
 
   // place No button near Yes
   const yesRect = yesBtn.getBoundingClientRect();
-  noBtn.style.left = yesRect.right + 20 + "px";
+  noBtn.style.left = yesRect.right + 30 + "px"; // offset to not overlap
   noBtn.style.top = yesRect.top + "px";
 
   song2.loop = true;
