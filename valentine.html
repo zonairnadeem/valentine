@@ -31,7 +31,7 @@
       background-size: cover;
       background-position: center;
       opacity: 0;
-      transition: opacity 0.8s ease;
+      transition: opacity 1s ease;
       z-index: 0;
     }
 
@@ -65,7 +65,7 @@
     }
 
     .card.fade {
-      transform: translateY(20px);
+      transform: translateY(30px);
       opacity: 0;
     }
 
@@ -76,11 +76,9 @@
       color: var(--text-dark);
     }
 
-    /* Button arena */
     .buttons {
       position: relative;
       height: 110px;
-      margin-top: 10px;
     }
 
     button {
@@ -90,12 +88,7 @@
       border: none;
       cursor: pointer;
       font-weight: 500;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
       position: absolute;
-    }
-
-    button:active {
-      transform: scale(0.96);
     }
 
     #yesBtn {
@@ -104,39 +97,63 @@
       background: linear-gradient(135deg, #ff5c8a, #ff2e63);
       color: white;
       box-shadow: 0 10px 25px rgba(255, 92, 138, 0.4);
-      z-index: 2;
     }
 
     #noBtn {
       background: #f3f3f3;
       color: #555;
       box-shadow: 0 6px 14px rgba(0,0,0,0.15);
-      z-index: 1;
     }
 
-    /* Celebration */
-    #flowers {
+    /* Celebration text */
+    #celebration {
       display: none;
-      margin-top: 25px;
-      font-size: 2rem;
-      animation: floatIn 1s ease forwards;
-    }
-
-    #flowers p {
-      margin-top: 10px;
-      font-size: 1.2rem;
+      position: relative;
+      z-index: 3;
+      text-align: center;
       color: white;
-      text-shadow: 0 4px 12px rgba(0,0,0,0.4);
+      animation: popIn 1s ease forwards;
     }
 
-    @keyframes floatIn {
+    #celebration h2 {
+      font-size: 3rem;
+      margin: 0;
+    }
+
+    #celebration p {
+      font-size: 1.4rem;
+      margin-top: 10px;
+    }
+
+    @keyframes popIn {
       from {
         opacity: 0;
-        transform: translateY(20px);
+        transform: scale(0.8);
       }
       to {
         opacity: 1;
-        transform: translateY(0);
+        transform: scale(1);
+      }
+    }
+
+    /* Floating hearts */
+    .heart {
+      position: fixed;
+      bottom: -40px;
+      font-size: 24px;
+      animation: floatUp linear forwards;
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    @keyframes floatUp {
+      from {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+      }
+      to {
+        transform: translateY(-110vh) scale(1.6);
+        opacity: 0;
       }
     }
   </style>
@@ -146,17 +163,17 @@
   <div id="bg"></div>
 
   <div class="card" id="card">
-    <h1>Version 2.3 Will you be my Valentine? 💖</h1>
+    <h1>Version 2.4 Will you be my Valentine? 💖</h1>
 
     <div class="buttons" id="arena">
       <button id="yesBtn" onclick="yesClicked()">Yes</button>
       <button id="noBtn">No</button>
     </div>
+  </div>
 
-    <div id="flowers">
-      🌹🌷🌸🌺💐
-      <p>You made my day ❤️</p>
-    </div>
+  <div id="celebration">
+    <h2>Yayyy!! 💖</h2>
+    <p>This just made me so happy 🥰</p>
   </div>
 
   <script>
@@ -165,8 +182,8 @@
     const arena = document.getElementById("arena");
     const card = document.getElementById("card");
     const bg = document.getElementById("bg");
+    const celebration = document.getElementById("celebration");
 
-    // Initial placement: No starts slightly below Yes
     let x = arena.offsetWidth / 2 - noBtn.offsetWidth / 2;
     let y = 60;
 
@@ -175,46 +192,11 @@
 
     function hop() {
       const step = 80;
+      const dx = (Math.random() > 0.5 ? 1 : -1) * step;
+      const dy = (Math.random() > 0.5 ? 1 : -1) * step;
 
-      const arenaRect = arena.getBoundingClientRect();
-      const yesRect = yesBtn.getBoundingClientRect();
-      const noRect = noBtn.getBoundingClientRect();
-
-      let attempts = 0;
-      let newX, newY;
-
-      do {
-        const dx = (Math.random() > 0.5 ? 1 : -1) * step;
-        const dy = (Math.random() > 0.5 ? 1 : -1) * step;
-
-        newX = x + dx;
-        newY = y + dy;
-
-        // Clamp inside arena
-        newX = Math.max(10, Math.min(newX, arena.offsetWidth - noBtn.offsetWidth - 10));
-        newY = Math.max(10, Math.min(newY, arena.offsetHeight - noBtn.offsetHeight - 10));
-
-        // Predict new rect
-        const predictedNo = {
-          left: arenaRect.left + newX,
-          right: arenaRect.left + newX + noRect.width,
-          top: arenaRect.top + newY,
-          bottom: arenaRect.top + newY + noRect.height
-        };
-
-        const overlapsYes =
-          !(predictedNo.right < yesRect.left ||
-            predictedNo.left > yesRect.right ||
-            predictedNo.bottom < yesRect.top ||
-            predictedNo.top > yesRect.bottom);
-
-        attempts++;
-        if (!overlapsYes) break;
-
-      } while (attempts < 10);
-
-      x = newX;
-      y = newY;
+      x = Math.max(10, Math.min(x + dx, arena.offsetWidth - noBtn.offsetWidth - 10));
+      y = Math.max(10, Math.min(y + dy, arena.offsetHeight - noBtn.offsetHeight - 10));
 
       noBtn.style.left = x + "px";
       noBtn.style.top = y + "px";
@@ -229,8 +211,22 @@
 
       setTimeout(() => {
         card.style.display = "none";
-        document.getElementById("flowers").style.display = "block";
-      }, 500);
+        celebration.style.display = "block";
+        startHearts();
+      }, 600);
+    }
+
+    function startHearts() {
+      setInterval(() => {
+        const heart = document.createElement("div");
+        heart.className = "heart";
+        heart.innerText = "💖";
+        heart.style.left = Math.random() * 100 + "vw";
+        heart.style.animationDuration = 4 + Math.random() * 3 + "s";
+        document.body.appendChild(heart);
+
+        setTimeout(() => heart.remove(), 7000);
+      }, 300);
     }
   </script>
 
