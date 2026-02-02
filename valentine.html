@@ -1,194 +1,231 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Valentine Celebration</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
-    :root {
-      --pink: #ff4f81;
-      --pink-soft: #fff0f6;
-      --text-dark: #1f1f1f;
-      --ease: cubic-bezier(0.22, 1, 0.36, 1);
-    }
-    * { box-sizing: border-box; }
-    body { margin:0; min-height:100vh; font-family:"Poppins", sans-serif; background: var(--pink-soft); overflow:hidden; }
+<meta charset="UTF-8">
+<title>Valentine Celebration</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+:root {
+  --pink: #ff4f81;
+  --pink-soft: #fff0f6;
+  --text-dark: #1f1f1f;
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+* { box-sizing: border-box; margin:0; padding:0; }
+body {
+  font-family: "Poppins", sans-serif;
+  background: var(--pink-soft);
+  overflow: hidden;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
 
-    /* ==== Splash Page ==== */
-    #splash {
-      position: fixed;
-      inset:0;
-      background: var(--pink-soft);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      flex-direction:column;
-      text-align:center;
-      z-index: 10;
-      transition: opacity 0.8s ease;
-    }
-    #splash.fade { opacity:0; pointer-events:none; }
+/* ==== Splash Page ==== */
+#splash {
+  position: fixed;
+  inset:0;
+  background: var(--pink-soft);
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+  z-index: 10;
+  transition: opacity 0.8s ease;
+}
+#splash.fade { opacity:0; pointer-events:none; }
+#splash h1 { font-size:3rem; color:var(--text-dark); margin-bottom:60px; }
+#enterBtn {
+  padding: 16px 50px;
+  font-size:1.3rem;
+  font-weight:600;
+  border:none;
+  border-radius:50px;
+  background: linear-gradient(135deg,#ff5c8a,#ff2e63);
+  color:white;
+  cursor:pointer;
+  box-shadow:0 12px 30px rgba(255,92,138,0.45);
+  transition: transform 0.25s var(--ease), box-shadow 0.25s var(--ease);
+}
+#enterBtn:hover { transform: translateY(-2px); box-shadow:0 18px 40px rgba(255,92,138,0.6); }
 
-    #splash h1 { font-size:3rem; color:var(--text-dark); margin-bottom:30px; }
-    #enterBtn {
-      padding: 16px 50px;
-      font-size:1.3rem;
-      font-weight:600;
-      border:none;
-      border-radius: 50px;
-      background: linear-gradient(135deg,#ff5c8a,#ff2e63);
-      color:white;
-      cursor:pointer;
-      box-shadow:0 12px 30px rgba(255,92,138,0.45);
-      transition: transform 0.25s var(--ease), box-shadow 0.25s var(--ease);
-    }
-    #enterBtn:hover { transform: translateY(-2px); box-shadow:0 18px 40px rgba(255,92,138,0.6); }
+/* ==== Main Background ==== */
+#bg {
+  position: fixed;
+  inset:0;
+  background-image:url("valentine.JPG");
+  background-size:cover;
+  background-position:center;
+  opacity:0;
+  transform:scale(1.08);
+  transition:opacity 1.4s ease, transform 6s linear;
+  z-index:0;
+}
+#bg.show { opacity:1; transform:scale(1); }
+#bg::after {
+  content:"";
+  position:absolute;
+  inset:0;
+  background: radial-gradient(circle at top, rgba(255,255,255,0.15),transparent 60%),
+              linear-gradient(to bottom, rgba(0,0,0,0.35), rgba(0,0,0,0.55));
+}
 
-    /* ==== Main Background ==== */
-    #bg { position:fixed; inset:0; background-image:url("valentine.JPG"); background-size:cover; background-position:center; opacity:0; transform:scale(1.08); transition:opacity 1.4s ease, transform 6s linear; z-index:0; }
-    #bg.show { opacity:1; transform:scale(1); }
-    #bg::after { content:""; position:absolute; inset:0; background: radial-gradient(circle at top, rgba(255,255,255,0.15),transparent 60%), linear-gradient(to bottom, rgba(0,0,0,0.35), rgba(0,0,0,0.55)); }
+/* ==== Valentine Card ==== */
+.card {
+  position: fixed;
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width:420px;
+  padding:56px 44px 64px;
+  border-radius:28px;
+  background: rgba(255,255,255,0.88);
+  backdrop-filter: blur(20px);
+  box-shadow:0 40px 80px rgba(0,0,0,0.18), inset 0 1px 0 rgba(255,255,255,0.5);
+  text-align:center;
+  transition: opacity 0.8s ease, transform 0.8s ease;
+  z-index:2;
+  top:50%;
+  left:50%;
+  transform: translate(-50%, -50%);
+}
+.card.fade { opacity:0; transform:translate(-50%, -50%) scale(0.96); }
 
-    /* ==== Card ==== */
-    .card { position: relative; z-index: 2; width:420px; padding:56px 44px 64px; border-radius:28px; background: rgba(255,255,255,0.88); backdrop-filter: blur(20px); box-shadow:0 40px 80px rgba(0,0,0,0.18), inset 0 1px 0 rgba(255,255,255,0.5); text-align:center; transition:opacity 0.8s ease, transform 0.8s ease; }
-    .card.fade { opacity:0; transform:translateY(40px) scale(0.96); }
+h1.main { margin-bottom:36px; font-size:2.4rem; font-weight:600; color:var(--text-dark); letter-spacing:-0.02em; }
 
-    h1.main { margin-bottom:36px; font-size:2.4rem; font-weight:600; color:var(--text-dark); letter-spacing:-0.02em; }
+/* Buttons */
+.buttons { position:relative; height:120px; width:100%; }
+button { position:absolute; border:none; cursor:pointer; padding:16px 42px; font-size:1.1rem; font-weight:500; border-radius:999px; transition: transform 0.25s var(--ease), box-shadow 0.25s var(--ease); }
+#yesBtn { left:50%; transform:translateX(-50%); background: linear-gradient(135deg,#ff5c8a,#ff2e63); color:white; box-shadow:0 18px 40px rgba(255,92,138,0.45); }
+#yesBtn:hover { transform: translateX(-50%) translateY(-2px); box-shadow:0 24px 55px rgba(255,92,138,0.6); }
+#noBtn { background:#f2f2f2; color:#555; box-shadow:0 8px 18px rgba(0,0,0,0.15); }
 
-    /* Buttons */
-    .buttons { position:relative; height:120px; }
-    button { position:absolute; border:none; cursor:pointer; padding:16px 42px; font-size:1.1rem; font-weight:500; border-radius:999px; transition: transform 0.25s var(--ease), box-shadow 0.25s var(--ease); }
-    #yesBtn { left:50%; transform:translateX(-50%); background: linear-gradient(135deg,#ff5c8a,#ff2e63); color:white; box-shadow:0 18px 40px rgba(255,92,138,0.45); }
-    #yesBtn:hover { transform: translateX(-50%) translateY(-2px); box-shadow:0 24px 55px rgba(255,92,138,0.6); }
-    #noBtn { background:#f2f2f2; color:#555; box-shadow:0 8px 18px rgba(0,0,0,0.15); }
+/* Celebration */
+#celebration { display:none; position:fixed; inset:0; z-index:3; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; pointer-events:none; color:white; }
+#celebration h2 { font-size:3.8rem; font-weight:700; margin:0; letter-spacing:-0.03em; text-shadow:0 20px 60px rgba(0,0,0,0.45); opacity:0; transform:scale(0.7); animation: headlineIn 1s forwards 0.3s; }
+#celebration p { font-size:1.5rem; margin-top:14px; text-shadow:0 8px 24px rgba(0,0,0,0.35); opacity:0; transform:translateY(20px); animation: subtextIn 1s forwards 0.8s; }
+@keyframes headlineIn { to { opacity:1; transform:scale(1);} }
+@keyframes subtextIn { to { opacity:1; transform:translateY(0);} }
 
-    /* Celebration */
-    #celebration { display:none; position:relative; z-index:3; text-align:center; pointer-events:none; color:white; }
-    #celebration h2 { font-size:3.8rem; font-weight:700; margin:0; letter-spacing:-0.03em; text-shadow:0 20px 60px rgba(0,0,0,0.45); opacity:0; transform:scale(0.7); animation: headlineIn 1s forwards 0.3s; }
-    #celebration p { font-size:1.5rem; margin-top:14px; text-shadow:0 8px 24px rgba(0,0,0,0.35); opacity:0; transform:translateY(20px); animation: subtextIn 1s forwards 0.8s; }
-    @keyframes headlineIn { to { opacity:1; transform:scale(1);} }
-    @keyframes subtextIn { to { opacity:1; transform:translateY(0);} }
-
-    /* Floating hearts/confetti */
-    .heart,.confetti { position: fixed; bottom:-60px; pointer-events:none; animation: floatUp linear forwards; filter:drop-shadow(0 6px 12px rgba(0,0,0,0.25)); z-index:2; }
-    @keyframes floatUp {0%{transform:translateY(0) scale(0.9);opacity:0;} 10%{opacity:1;} 100%{transform:translateY(-120vh) scale(1.8);opacity:0;}}
-  </style>
+/* Floating hearts/confetti */
+.heart,.confetti { position: fixed; bottom:-60px; pointer-events:none; animation: floatUp linear forwards; filter:drop-shadow(0 6px 12px rgba(0,0,0,0.25)); z-index:2; }
+@keyframes floatUp {0%{transform:translateY(0) scale(0.9);opacity:0;} 10%{opacity:1;} 100%{transform:translateY(-120vh) scale(1.8);opacity:0;}}
+</style>
 </head>
 <body>
 
-  <!-- Splash Page -->
-  <div id="splash">
-    <h1>A little surprise for someone special… 💖</h1>
-    <button id="enterBtn">ENTER</button>
+<!-- Splash Page -->
+<div id="splash">
+  <h1>A little surprise for someone special… 💖</h1>
+  <button id="enterBtn">ENTER</button>
+</div>
+
+<!-- Main Background -->
+<div id="bg"></div>
+
+<!-- Valentine Card -->
+<div class="card" id="card">
+  <h1 class="main">Will you be my Valentine?</h1>
+  <div class="buttons" id="arena">
+    <button id="yesBtn">Yes</button>
+    <button id="noBtn">No</button>
   </div>
+</div>
 
-  <!-- Main Background -->
-  <div id="bg"></div>
+<!-- Celebration -->
+<div id="celebration">
+  <h2>Yayyy 💖</h2>
+  <p>This just made my day so happy 🥰</p>
+</div>
 
-  <!-- Valentine Card -->
-  <div class="card" id="card">
-    <h1 class="main">Will you be my Valentine?</h1>
-    <div class="buttons" id="arena">
-      <button id="yesBtn">Yes</button>
-      <button id="noBtn">No</button>
-    </div>
-  </div>
+<!-- Audio -->
+<audio id="song1" src="song1.mp3" preload="auto"></audio>
+<audio id="song2" src="song2.mp3" preload="auto"></audio>
+<audio id="song3" src="song3.mp3" preload="auto"></audio>
 
-  <!-- Celebration -->
-  <div id="celebration">
-    <h2>Yayyy 💖</h2>
-    <p>This just made my day so happy 🥰</p>
-  </div>
+<script>
+const splash = document.getElementById("splash");
+const enterBtn = document.getElementById("enterBtn");
+const card = document.getElementById("card");
+const bg = document.getElementById("bg");
+const celebration = document.getElementById("celebration");
+const noBtn = document.getElementById("noBtn");
+const yesBtn = document.getElementById("yesBtn");
+const arena = document.getElementById("arena");
 
-  <!-- Audio -->
-  <audio id="song1" src="song1.mp3" preload="auto"></audio>
-  <audio id="song2" src="song2.mp3" preload="auto"></audio>
-  <audio id="song3" src="song3.mp3" preload="auto"></audio>
+const song1 = document.getElementById("song1");
+const song2 = document.getElementById("song2");
+const song3 = document.getElementById("song3");
 
-  <script>
-    const splash = document.getElementById("splash");
-    const enterBtn = document.getElementById("enterBtn");
-    const card = document.getElementById("card");
-    const bg = document.getElementById("bg");
-    const celebration = document.getElementById("celebration");
-    const noBtn = document.getElementById("noBtn");
-    const yesBtn = document.getElementById("yesBtn");
-    const arena = document.getElementById("arena");
+// ENTER click -> hide splash, show card, play song2
+enterBtn.addEventListener("click", ()=>{
+  splash.classList.add("fade");
+  bg.classList.add("show");
+  card.style.display="flex";
+  song2.loop = true;
+  song2.volume = 0.5;
+  song2.play().catch(()=>{});
+});
 
-    const song1 = document.getElementById("song1");
-    const song2 = document.getElementById("song2");
-    const song3 = document.getElementById("song3");
+// Initial No button position
+let x = arena.offsetWidth/2 - noBtn.offsetWidth/2;
+let y = 70;
+noBtn.style.left = x+"px";
+noBtn.style.top = y+"px";
 
-    let audioStarted = false;
+function hop(){
+  const step = 90;
+  const dx = (Math.random()>0.5?1:-1)*step;
+  const dy = (Math.random()>0.5?1:-1)*step;
+  x = Math.max(12, Math.min(x+dx, arena.offsetWidth-noBtn.offsetWidth-12));
+  y = Math.max(12, Math.min(y+dy, arena.offsetHeight-noBtn.offsetHeight-12));
+  noBtn.style.left = x+"px";
+  noBtn.style.top = y+"px";
 
-    // ENTER button click
-    enterBtn.addEventListener("click", ()=>{
-      splash.classList.add("fade");
+  // Play song1
+  song2.pause();
+  song3.pause();
+  song1.currentTime=0;
+  song1.play();
+}
 
-      // Start song2 background
-      song2.loop = true;
-      song2.volume = 0.5;
-      song2.play().catch(()=>{}); // user interaction allows autoplay
+noBtn.addEventListener("mouseenter", hop);
+noBtn.addEventListener("touchstart", hop);
 
-      card.style.display="block";
-    });
+yesBtn.addEventListener("click", ()=>{
+  card.classList.add("fade");
+  setTimeout(()=>{
+    card.style.display="none";
+    celebration.style.display="flex";
 
-    // Initial No button position
-    let x = arena.offsetWidth/2 - noBtn.offsetWidth/2;
-    let y = 70;
-    noBtn.style.left = x+"px";
-    noBtn.style.top = y+"px";
+    // Play song3
+    song1.pause();
+    song2.pause();
+    song3.currentTime=0;
+    song3.play();
 
-    function hop(){
-      const step = 90;
-      const dx = (Math.random() > 0.5 ? 1 : -1)*step;
-      const dy = (Math.random() > 0.5 ? 1 : -1)*step;
-      x = Math.max(12, Math.min(x+dx, arena.offsetWidth-noBtn.offsetWidth-12));
-      y = Math.max(12, Math.min(y+dy, arena.offsetHeight-noBtn.offsetHeight-12));
-      noBtn.style.left = x+"px";
-      noBtn.style.top = y+"px";
+    startParticles();
+  },700);
+});
 
-      // Play song1
-      song2.pause();
-      song3.pause();
-      song1.currentTime = 0;
-      song1.play();
-    }
-
-    noBtn.addEventListener("mouseenter", hop);
-    noBtn.addEventListener("touchstart", hop);
-
-    yesBtn.addEventListener("click", ()=>{
-      bg.classList.add("show");
-      card.classList.add("fade");
-
-      setTimeout(()=>{
-        card.style.display="none";
-        celebration.style.display="block";
-
-        // Play song3
-        song1.pause();
-        song2.pause();
-        song3.currentTime = 0;
-        song3.play();
-
-        startParticles();
-      },700);
-    });
-
-    function startParticles(){
-      setInterval(()=>{
-        const symbols=["💖","🌹","✨","💐","🎉"];
-        const elem = document.createElement("div");
-        elem.className = Math.random()<0.5?"heart":"confetti";
-        elem.textContent = symbols[Math.floor(Math.random()*symbols.length)];
-        elem.style.left = Math.random()*100+"vw";
-        elem.style.fontSize = 18+Math.random()*18+"px";
-        elem.style.animationDuration = 4+Math.random()*3+"s";
-        document.body.appendChild(elem);
-        setTimeout(()=>elem.remove(),9000);
-      },200);
-    }
-  </script>
+function startParticles(){
+  setInterval(()=>{
+    const symbols=["💖","🌹","✨","💐","🎉"];
+    const elem=document.createElement("div");
+    elem.className = Math.random()<0.5?"heart":"confetti";
+    elem.textContent = symbols[Math.floor(Math.random()*symbols.length)];
+    elem.style.left = Math.random()*100+"vw";
+    elem.style.fontSize = 18+Math.random()*18+"px";
+    elem.style.animationDuration = 4+Math.random()*3+"s";
+    document.body.appendChild(elem);
+    setTimeout(()=>elem.remove(),9000);
+  },200);
+}
+</script>
 </body>
 </html>
+
