@@ -5,6 +5,7 @@
 <title>Valentine Surprise</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
+/* Reset and basic */
 * { margin:0; padding:0; box-sizing:border-box; font-family:"Poppins", sans-serif; }
 html, body { height:100%; width:100%; overflow:hidden; background:#fff0f6; }
 
@@ -21,6 +22,8 @@ html, body { height:100%; width:100%; overflow:hidden; background:#fff0f6; }
 
 /* Splash page */
 #splash {
+  position:relative;
+  z-index:2;
   display:flex;
   flex-direction:column;
   align-items:center;
@@ -28,8 +31,7 @@ html, body { height:100%; width:100%; overflow:hidden; background:#fff0f6; }
   height:100vh;
   width:100vw;
   text-align:center;
-  z-index:5;
-  position:relative;
+  pointer-events:auto;
 }
 #splash h1 { margin-bottom:80px; font-size:3rem; color:#1f1f1f; }
 #enterBtn {
@@ -42,8 +44,6 @@ html, body { height:100%; width:100%; overflow:hidden; background:#fff0f6; }
   cursor:pointer;
   box-shadow:0 12px 30px rgba(255,92,138,0.45);
   transition: transform 0.25s, box-shadow 0.25s;
-  z-index:5;
-  position:relative;
 }
 #enterBtn:hover { transform:translateY(-2px); box-shadow:0 18px 40px rgba(255,92,138,0.6); }
 
@@ -51,6 +51,7 @@ html, body { height:100%; width:100%; overflow:hidden; background:#fff0f6; }
 #card {
   display:none;
   position:relative;
+  z-index:2;
   height:100vh;
   width:100vw;
   display:flex;
@@ -58,19 +59,17 @@ html, body { height:100%; width:100%; overflow:hidden; background:#fff0f6; }
   align-items:center;
   justify-content:center;
   text-align:center;
-  z-index:2;
 }
 #card h1 { font-size:2.4rem; margin-bottom:36px; color:#1f1f1f; }
-.buttons { position:relative; width:200px; height:60px; }
+.buttons { display:flex; margin-top:20px; position:relative; }
 #yesBtn {
   padding:16px 50px;
   background: linear-gradient(135deg,#ff5c8a,#ff2e63);
   color:white;
   border:none;
   border-radius:50px;
-  cursor:pointer;
   box-shadow:0 18px 40px rgba(255,92,138,0.45);
-  position:relative;
+  cursor:pointer;
 }
 #yesBtn:hover { transform:translateY(-2px); box-shadow:0 24px 55px rgba(255,92,138,0.6); }
 #noBtn {
@@ -79,18 +78,18 @@ html, body { height:100%; width:100%; overflow:hidden; background:#fff0f6; }
   color:#555;
   border:none;
   border-radius:50px;
+  margin-left:20px;
+  position:relative;
   cursor:pointer;
-  position:absolute;  /* always absolute relative to body */
-  display:none;       /* hidden until Enter clicked */
-  z-index:4;
 }
 
 /* Celebration page */
 #celebration {
   display:none;
-  position:fixed;
-  inset:0;
-  z-index:3;
+  position:relative;
+  z-index:2;
+  height:100vh;
+  width:100vw;
   display:flex;
   flex-direction:column;
   align-items:center;
@@ -98,29 +97,30 @@ html, body { height:100%; width:100%; overflow:hidden; background:#fff0f6; }
   text-align:center;
 }
 
-/* Particles */
+/* Hearts/confetti */
 .heart,.confetti {
   position: fixed;
   bottom:-60px;
   pointer-events:none;
   animation: floatUp linear forwards;
   filter: drop-shadow(0 6px 12px rgba(0,0,0,0.25));
-  z-index:4;
+  z-index:3;
 }
 @keyframes floatUp {0%{transform:translateY(0) scale(0.9);opacity:0;}10%{opacity:1;}100%{transform:translateY(-120vh) scale(1.8);opacity:0;}}
 </style>
 </head>
 <body>
 
+<!-- Slideshow background -->
 <div id="slideshow"></div>
 
-<!-- Splash -->
+<!-- Splash page -->
 <div id="splash">
   <h1>A little surprise for someone special… 💖</h1>
   <button id="enterBtn">ENTER</button>
 </div>
 
-<!-- Card -->
+<!-- Card page -->
 <div id="card">
   <h1>Will you be my Valentine?</h1>
   <div class="buttons">
@@ -129,7 +129,7 @@ html, body { height:100%; width:100%; overflow:hidden; background:#fff0f6; }
   </div>
 </div>
 
-<!-- Celebration -->
+<!-- Celebration page -->
 <div id="celebration"></div>
 
 <!-- Audio -->
@@ -150,66 +150,57 @@ const song1 = document.getElementById("song1");
 const song2 = document.getElementById("song2");
 const song3 = document.getElementById("song3");
 
-const images = ['img1.jpg','img2.jpg','img3.jpg','img4.jpg','img5.jpg','img6.jpg','img7.jpg','img8.jpg','img9.jpg','img10.jpg'];
+const images = ['img1.jpeg','img2.jpeg','img3.jpeg','img4.jpeg','img5.jpeg','img6.jpeg','img7.jpeg','img8.jpeg','img9.jpeg','img10.jpeg'];
+
 let current = 0;
 
-// --- ENTER BUTTON ---
+// === ENTER BUTTON ===
 enterBtn.addEventListener("click", () => {
-  splash.style.display = "none";
-  card.style.display = "flex";
-
-  // Show No button and position relative to viewport
-  noBtn.style.display = "block";
-  noBtn.style.position = "absolute";
-  const yesRect = yesBtn.getBoundingClientRect();
-  noBtn.style.left = yesRect.right + 20 + "px";
-  noBtn.style.top = yesRect.top + "px";
-
   song2.loop = true;
   song2.volume = 0.5;
-  song2.play().catch(()=>{});
+  song2.play().catch(()=>{}); // play after user gesture
+
+  splash.style.display = "none";
+  card.style.display = "flex";
 });
 
-// --- NO BUTTON HOP ---
-let hopInProgress=false;
+// === NO BUTTON HOP ===
+noBtn.addEventListener("mouseenter", hop);
+noBtn.addEventListener("touchstart", hop);
 function hop() {
-  if(hopInProgress) return;
-  hopInProgress=true;
-
-  const padding = 10;
+  const padding = 10; // margin from edges
   const maxX = window.innerWidth - noBtn.offsetWidth - padding;
   const maxY = window.innerHeight - noBtn.offsetHeight - padding;
 
+  // Get Yes button bounds
   const yesRect = yesBtn.getBoundingClientRect();
-  let x, y, tries=0;
-  do{
-    x = Math.random()*maxX;
-    y = Math.random()*maxY;
+
+  let x, y, tries = 0;
+  do {
+    x = Math.random() * maxX;
+    y = Math.random() * maxY;
     tries++;
-    if(tries>100) break;
-  } while(
-    x < yesRect.right + 10 &&
+    // break after too many tries to avoid infinite loop
+    if (tries > 100) break;
+  } while (
+    x < yesRect.right + 10 && 
     x + noBtn.offsetWidth > yesRect.left - 10 &&
     y < yesRect.bottom + 10 &&
     y + noBtn.offsetHeight > yesRect.top - 10
   );
 
-  noBtn.style.left = x + "px";
-  noBtn.style.top = y + "px";
+  noBtn.style.transform = `translate(${x}px, ${y}px)`;
 
-  // Play song1
+  // Play song1 when No is hovered
   song2.pause();
   song3.pause();
-  song1.currentTime=0;
+  song1.currentTime = 0;
   song1.play();
-
-  setTimeout(()=>hopInProgress=false,200);
 }
-noBtn.addEventListener("mouseenter", hop);
-noBtn.addEventListener("touchstart", hop);
 
-// --- YES BUTTON ---
-yesBtn.addEventListener("click", ()=>{
+
+// === YES BUTTON ===
+yesBtn.addEventListener("click", () => {
   card.style.display="none";
   celebration.style.display="flex";
 
@@ -222,41 +213,38 @@ yesBtn.addEventListener("click", ()=>{
   startSlideshow();
 });
 
-// --- PARTICLES ---
+// === PARTICLES ===
 function startParticles(){
   setInterval(()=>{
     const symbols=["💖","🌹","✨","💐","🎉"];
-    const elem=document.createElement("div");
-    elem.className=Math.random()<0.5?"heart":"confetti";
-    elem.textContent=symbols[Math.floor(Math.random()*symbols.length)];
-    elem.style.left=Math.random()*100+"vw";
-    elem.style.fontSize=18 + Math.random()*18 + "px";
-    elem.style.animationDuration = 4+Math.random()*3+"s";
+    const elem = document.createElement("div");
+    elem.className = Math.random()<0.5?"heart":"confetti";
+    elem.textContent = symbols[Math.floor(Math.random()*symbols.length)];
+    elem.style.left = Math.random()*100 + "vw";
+    elem.style.fontSize = 18 + Math.random()*18 + "px";
+    elem.style.animationDuration = 4 + Math.random()*3 + "s";
     document.body.appendChild(elem);
     setTimeout(()=>elem.remove(),9000);
   },200);
 }
 
-// --- SLIDESHOW ---
+// === SLIDESHOW ===
 function startSlideshow(){
-  slideshow.style.zIndex=1;
-  slideshow.style.opacity=1;
-  slideshow.style.backgroundImage=`url(${images[current]})`;
+  slideshow.style.zIndex = 1;
+  slideshow.style.opacity = 1;
+  slideshow.style.backgroundImage = `url(${images[current]})`;
 
   function nextSlide(){
-    current = (current + 1) % images.length;
-    const nextImage = images[current];
-    slideshow.style.transition='opacity 0.5s ease-in-out';
-    slideshow.style.opacity=0;
-
-    setTimeout(()=>{
-      slideshow.style.backgroundImage=`url(${nextImage})`;
-      slideshow.style.opacity=1;
-    },250);
-
-    setTimeout(nextSlide,3000);
+    slideshow.style.opacity = 0;
+    setTimeout(() => {
+      current = (current + 1) % images.length;
+      slideshow.style.backgroundImage = `url(${images[current]})`;
+      slideshow.style.opacity = 1;
+      setTimeout(nextSlide, 3000); // show next after 3s
+    }, 500); // match fade duration
   }
-  setTimeout(nextSlide,3000);
+
+  setTimeout(nextSlide, 3000); // first image shows 3s
 }
 </script>
 </body>
