@@ -19,6 +19,7 @@ body {
   align-items: center;
   justify-content: center;
   overflow: hidden;
+  transition: background 0.3s ease;
 }
 
 .screen {
@@ -156,6 +157,20 @@ const slideshow = document.getElementById("slideshow");
 noBtn.style.left = "120px";
 noBtn.style.top = "0px";
 
+// background swap control
+let bgTimeout = null;
+const originalBg = document.body.style.background;
+
+function flashNoBackground() {
+  if (bgTimeout) clearTimeout(bgTimeout);
+
+  document.body.style.background = "url('no-bg.jfif') center / cover no-repeat";
+
+  bgTimeout = setTimeout(() => {
+    document.body.style.background = originalBg || "#fff0f5";
+  }, 1500);
+}
+
 function show(from, to) {
   from.classList.remove("active");
   to.classList.add("active");
@@ -172,6 +187,8 @@ enterBtn.onclick = () => {
 function hop() {
   song1.currentTime = 0;
   song1.play();
+
+  flashNoBackground();
 
   const maxX = 160;
   const maxY = 80;
@@ -199,7 +216,10 @@ replayBtn.onclick = () => {
 };
 
 // SLIDESHOW
-const images = [ 'img1.jpeg','img2.jpeg','img3.jpeg','img4.jpeg','img5.jpeg','img6.jpeg','img7.jpeg','img8.jpeg','img9.jpeg','img10.jpeg','img11.jpeg','img12.jpeg' ];
+const images = [
+  'img1.jpeg','img2.jpeg','img3.jpeg','img4.jpeg','img5.jpeg','img6.jpeg',
+  'img7.jpeg','img8.jpeg','img9.jpeg','img10.jpeg','img11.jpeg','img12.jpeg'
+];
 
 let index = 0;
 
