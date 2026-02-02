@@ -10,8 +10,8 @@
   --text-dark: #1f1f1f;
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
 }
-* { margin:0; padding:0; box-sizing:border-box; font-family: "Poppins", sans-serif; }
-body { overflow:hidden; background: var(--pink-soft); height:100vh; }
+* { margin:0; padding:0; box-sizing:border-box; font-family:"Poppins", sans-serif; }
+body { overflow:hidden; height:100vh; background:var(--pink-soft); }
 
 /* Common button style */
 button {
@@ -22,7 +22,18 @@ button {
   transition: transform 0.25s var(--ease), box-shadow 0.25s var(--ease);
 }
 
-/* === SPLASH PAGE === */
+/* === BACKGROUND SLIDESHOW === */
+#slideshow {
+  position: fixed;
+  inset:0;
+  z-index:0;
+  background-size: cover;
+  background-position: center;
+  opacity:0;
+  transition: opacity 0.5s ease-in-out;
+}
+
+/* === SPLASH === */
 #splash {
   display:flex;
   flex-direction:column;
@@ -30,6 +41,7 @@ button {
   justify-content:center;
   height:100vh;
   text-align:center;
+  z-index:2;
 }
 
 #splash h1 {
@@ -44,9 +56,9 @@ button {
   color:white;
   box-shadow:0 12px 30px rgba(255,92,138,0.45);
 }
-#enterBtn:hover { transform: translateY(-2px); box-shadow:0 18px 40px rgba(255,92,138,0.6); }
+#enterBtn:hover { transform:translateY(-2px); box-shadow:0 18px 40px rgba(255,92,138,0.6); }
 
-/* === CARD PAGE === */
+/* === CARD === */
 #card {
   display:none;
   flex-direction:column;
@@ -73,19 +85,18 @@ h1.main { font-size:2.4rem; margin-bottom:36px; color:var(--text-dark); }
   justify-content:center;
   height:100vh;
   text-align:center;
-  color:white;
-  background: linear-gradient(135deg,#ff9cc9,#ff5c8a);
+  z-index:2;
 }
 
-#celebration h2 { font-size:3.8rem; margin-bottom:14px; text-shadow:0 20px 60px rgba(0,0,0,0.45);}
-#celebration p { font-size:1.5rem; text-shadow:0 8px 24px rgba(0,0,0,0.35); }
-
 /* Hearts/confetti */
-.heart,.confetti { position: fixed; bottom:-60px; pointer-events:none; animation: floatUp linear forwards; filter: drop-shadow(0 6px 12px rgba(0,0,0,0.25)); z-index:2;}
+.heart,.confetti { position: fixed; bottom:-60px; pointer-events:none; animation: floatUp linear forwards; filter: drop-shadow(0 6px 12px rgba(0,0,0,0.25)); z-index:3;}
 @keyframes floatUp {0%{transform:translateY(0) scale(0.9);opacity:0;}10%{opacity:1;}100%{transform:translateY(-120vh) scale(1.8);opacity:0;}}
 </style>
 </head>
 <body>
+
+<!-- BACKGROUND -->
+<div id="slideshow"></div>
 
 <!-- SPLASH -->
 <div id="splash">
@@ -103,10 +114,7 @@ h1.main { font-size:2.4rem; margin-bottom:36px; color:var(--text-dark); }
 </div>
 
 <!-- CELEBRATION -->
-<div id="celebration">
-  <h2>Yayyy 💖</h2>
-  <p>This just made my day so happy 🥰</p>
-</div>
+<div id="celebration"></div>
 
 <!-- AUDIO -->
 <audio id="song1" src="song1.mp3" preload="auto"></audio>
@@ -114,18 +122,26 @@ h1.main { font-size:2.4rem; margin-bottom:36px; color:var(--text-dark); }
 <audio id="song3" src="song3.mp3" preload="auto"></audio>
 
 <script>
+// DOM elements
 const splash = document.getElementById("splash");
 const enterBtn = document.getElementById("enterBtn");
 const card = document.getElementById("card");
 const celebration = document.getElementById("celebration");
 const yesBtn = document.getElementById("yesBtn");
 const noBtn = document.getElementById("noBtn");
+const slideshow = document.getElementById("slideshow");
 
 const song1 = document.getElementById("song1");
 const song2 = document.getElementById("song2");
 const song3 = document.getElementById("song3");
 
-// ENTER -> show card
+// === IMAGE LIST ===
+const images = [
+  'img1.jpg','img2.jpg','img3.jpg','img4.jpg','img5.jpg',
+  'img6.jpg','img7.jpg','img8.jpg','img9.jpg','img10.jpg'
+];
+
+// === ENTER CLICK ===
 enterBtn.addEventListener("click", ()=>{
   splash.style.display="none";
   card.style.display="flex";
@@ -134,12 +150,12 @@ enterBtn.addEventListener("click", ()=>{
   song2.play().catch(()=>{});
 });
 
-// NO hover -> hop
+// === NO HOP ===
 let x=0, y=0;
 function hop(){
   const step=90;
-  x = (Math.random()*200-100);
-  y = (Math.random()*50-25);
+  x=(Math.random()*200-100);
+  y=(Math.random()*50-25);
   noBtn.style.transform=`translate(${x}px, ${y}px)`;
 
   song2.pause(); song3.pause();
@@ -148,7 +164,7 @@ function hop(){
 noBtn.addEventListener("mouseenter", hop);
 noBtn.addEventListener("touchstart", hop);
 
-// YES click -> celebration
+// === YES CLICK ===
 yesBtn.addEventListener("click", ()=>{
   card.style.display="none";
   celebration.style.display="flex";
@@ -157,9 +173,10 @@ yesBtn.addEventListener("click", ()=>{
   song3.currentTime=0; song3.play();
 
   startParticles();
+  startSlideshow();
 });
 
-// PARTICLES
+// === PARTICLES ===
 function startParticles(){
   setInterval(()=>{
     const symbols=["💖","🌹","✨","💐","🎉"];
@@ -172,6 +189,26 @@ function startParticles(){
     document.body.appendChild(elem);
     setTimeout(()=>elem.remove(),9000);
   },200);
+}
+
+// === SLIDESHOW ===
+let current=0;
+function startSlideshow(){
+  slideshow.style.opacity=1;
+  slideshow.style.backgroundImage=`url(${images[current]})`;
+
+  setInterval(()=>{
+    current = (current+1) % images.length;
+    const nextImage = new Image();
+    nextImage.src = images[current];
+    nextImage.onload = ()=>{
+      slideshow.style.opacity=0;
+      setTimeout(()=>{
+        slideshow.style.backgroundImage=`url(${images[current]})`;
+        slideshow.style.opacity=1;
+      },500); // fade transition
+    };
+  }, 3000); // 3 seconds per image
 }
 </script>
 </body>
