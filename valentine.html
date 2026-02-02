@@ -22,7 +22,7 @@ body {
   background: var(--pink-soft);
 }
 
-/* Splash Page */
+/* ===== SPLASH PAGE ===== */
 #splash {
   position: fixed;
   inset: 0;
@@ -40,7 +40,7 @@ body {
 #splash h1 {
   font-size: 3rem;
   color: var(--text-dark);
-  margin-bottom: 60px;
+  margin-bottom: 80px; /* increase margin to separate from button */
 }
 #enterBtn {
   padding: 16px 50px;
@@ -56,11 +56,11 @@ body {
 }
 #enterBtn:hover { transform: translateY(-2px); box-shadow: 0 18px 40px rgba(255,92,138,0.6); }
 
-/* Background */
+/* ===== BACKGROUND ===== */
 #bg {
   position: fixed;
   inset: 0;
-  background-image: url("valentine.jpg");
+  background-image: url("valentine.JPG");
   background-size: cover;
   background-position: center;
   opacity: 0;
@@ -77,7 +77,7 @@ body {
               linear-gradient(to bottom, rgba(0,0,0,0.35), rgba(0,0,0,0.55));
 }
 
-/* Card */
+/* ===== VALENTINE CARD ===== */
 .card {
   position: fixed;
   top: 50%;
@@ -108,7 +108,7 @@ button { position: absolute; border:none; cursor:pointer; padding:16px 42px; fon
 #yesBtn:hover { transform: translateX(-50%) translateY(-2px); box-shadow:0 24px 55px rgba(255,92,138,0.6); }
 #noBtn { background:#f2f2f2; color:#555; box-shadow:0 8px 18px rgba(0,0,0,0.15); }
 
-/* Celebration */
+/* ===== CELEBRATION ===== */
 #celebration {
   display:none;
   position: fixed;
@@ -147,16 +147,16 @@ button { position: absolute; border:none; cursor:pointer; padding:16px 42px; fon
 </head>
 <body>
 
-<!-- Splash -->
+<!-- SPLASH -->
 <div id="splash">
   <h1>A little surprise for someone special… 💖</h1>
   <button id="enterBtn">ENTER</button>
 </div>
 
-<!-- Background -->
+<!-- BACKGROUND -->
 <div id="bg"></div>
 
-<!-- Card -->
+<!-- VALENTINE CARD -->
 <div class="card" id="card">
   <h1 class="main">Will you be my Valentine?</h1>
   <div class="buttons" id="arena">
@@ -165,13 +165,13 @@ button { position: absolute; border:none; cursor:pointer; padding:16px 42px; fon
   </div>
 </div>
 
-<!-- Celebration -->
+<!-- CELEBRATION -->
 <div id="celebration">
   <h2>Yayyy 💖</h2>
   <p>This just made my day so happy 🥰</p>
 </div>
 
-<!-- Audio -->
+<!-- AUDIO -->
 <audio id="song1" src="song1.mp3" preload="auto"></audio>
 <audio id="song2" src="song2.mp3" preload="auto"></audio>
 <audio id="song3" src="song3.mp3" preload="auto"></audio>
@@ -190,15 +190,18 @@ const song1 = document.getElementById("song1");
 const song2 = document.getElementById("song2");
 const song3 = document.getElementById("song3");
 
-// ENTER click -> hide splash, show card, play song2
+// ==== ENTER CLICK ====
 enterBtn.addEventListener("click", ()=>{
-  splash.classList.add("fade");
-  card.style.display="flex";
-  bg.classList.add("show");
-  song2.loop=true; song2.volume=0.5; song2.play().catch(()=>{});
+  splash.classList.add("fade");      // hide splash
+  card.style.display = "flex";       // show main card
+  bg.classList.add("show");           // show background
+
+  song2.loop = true;
+  song2.volume = 0.5;
+  song2.play().catch(()=>{});
 });
 
-// No button initial position
+// ==== NO BUTTON HOP ====
 let x = arena.offsetWidth/2 - noBtn.offsetWidth/2;
 let y = 70;
 noBtn.style.left = x+"px";
@@ -213,7 +216,7 @@ function hop(){
   noBtn.style.left=x+"px";
   noBtn.style.top=y+"px";
 
-  // Play song1
+  // play song1
   song2.pause(); song3.pause();
   song1.currentTime=0; song1.play();
 }
@@ -221,19 +224,21 @@ function hop(){
 noBtn.addEventListener("mouseenter", hop);
 noBtn.addEventListener("touchstart", hop);
 
+// ==== YES BUTTON CLICK ====
 yesBtn.addEventListener("click", ()=>{
   card.classList.add("fade");
   setTimeout(()=>{
     card.style.display="none";
     celebration.style.display="flex";
 
-    // Play song3
-    song1.pause(); song2.pause(); song3.currentTime=0; song3.play();
+    song1.pause(); song2.pause();
+    song3.currentTime=0; song3.play();
 
     startParticles();
   },700);
 });
 
+// ==== PARTICLES ====
 function startParticles(){
   setInterval(()=>{
     const symbols=["💖","🌹","✨","💐","🎉"];
