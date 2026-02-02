@@ -7,13 +7,13 @@
 <style>
   * {
     box-sizing: border-box;
-    font-family: Arial, sans-serif;
+    font-family: "Poppins", Arial, sans-serif;
   }
 
   body {
     margin: 0;
     height: 100vh;
-    background: #000;
+    background: radial-gradient(circle at top, #ff9acb, #2b0a3d);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -22,46 +22,64 @@
   }
 
   .screen {
-    display: none;
+    position: absolute;
+    inset: 0;
+    display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     text-align: center;
-    width: 100%;
-    height: 100%;
+    opacity: 0;
+    pointer-events: none;
+    transform: scale(0.98);
+    transition: opacity 0.6s ease, transform 0.6s ease;
   }
 
   .screen.active {
-    display: flex;
+    opacity: 1;
+    pointer-events: auto;
+    transform: scale(1);
+  }
+
+  h1 {
+    font-size: 2.4rem;
+    margin-bottom: 30px;
+    text-shadow: 0 6px 20px rgba(0,0,0,0.4);
   }
 
   button {
-    padding: 14px 28px;
+    padding: 14px 34px;
     font-size: 18px;
     border: none;
-    border-radius: 8px;
+    border-radius: 999px;
     cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.25);
   }
 
   #enterBtn {
-    background: hotpink;
+    background: linear-gradient(135deg, #ff5fa2, #ff8ac7);
     color: white;
-  }
-
-  #yesBtn {
-    background: #4CAF50;
-    color: white;
-    margin-right: 30px;
-  }
-
-  #noBtn {
-    background: #e74c3c;
-    color: white;
-    position: relative;
   }
 
   #buttons {
     margin-top: 30px;
+    position: relative;
+  }
+
+  #yesBtn {
+    background: linear-gradient(135deg, #4CAF50, #6be27a);
+    color: white;
+    margin-right: 40px;
+  }
+
+  #noBtn {
+    background: linear-gradient(135deg, #e74c3c, #ff6b5a);
+    color: white;
     position: relative;
   }
 
@@ -70,13 +88,26 @@
     inset: 0;
     background-size: cover;
     background-position: center;
-    transition: opacity 0.8s ease-in-out;
     opacity: 1;
+    transition: opacity 0.8s ease-in-out;
+  }
+
+  /* soft vignette */
+  #slideshow::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle, transparent 60%, rgba(0,0,0,0.4));
   }
 </style>
 </head>
 
 <body>
+
+<!-- AUDIO -->
+<audio id="song1" src="audio/song1.mp3"></audio>
+<audio id="song2" src="audio/song2.mp3" loop></audio>
+<audio id="song3" src="audio/song3.mp3" loop></audio>
 
 <!-- SCREEN 1 -->
 <div id="screen1" class="screen active">
@@ -107,37 +138,47 @@
   const yesBtn = document.getElementById("yesBtn");
   const noBtn = document.getElementById("noBtn");
 
+  const song1 = document.getElementById("song1");
+  const song2 = document.getElementById("song2");
+  const song3 = document.getElementById("song3");
+
   const slideshow = document.getElementById("slideshow");
 
-  let noX = 0;
-  let noY = 0;
+  function showScreen(from, to) {
+    from.classList.remove("active");
+    to.classList.add("active");
+  }
 
-  // ENTER → Screen 2
   enterBtn.onclick = () => {
-    screen1.classList.remove("active");
-    screen2.classList.add("active");
+    showScreen(screen1, screen2);
+    song2.volume = 0.6;
+    song2.play();
   };
 
-  // NO button hop (never disappears, never overlaps YES)
   noBtn.onmouseenter = () => {
+    song1.currentTime = 0;
+    song1.play();
+
     const maxX = 200;
     const maxY = 120;
 
-    noX = Math.random() * maxX - maxX / 2;
-    noY = Math.random() * maxY - maxY / 2;
+    const x = Math.random() * maxX - maxX / 2;
+    const y = Math.random() * maxY - maxY / 2;
 
-    noBtn.style.transform = `translate(${noX}px, ${noY}px)`;
+    noBtn.style.transform = `translate(${x}px, ${y}px)`;
   };
 
-  // YES → Slideshow
   yesBtn.onclick = () => {
-    screen2.classList.remove("active");
-    screen3.classList.add("active");
+    showScreen(screen2, screen3);
+
+    song2.pause();
+    song3.volume = 0.7;
+    song3.play();
+
     startSlideshow();
   };
 
-  // Slideshow logic
-  const images = ['img1.jpeg','img2.jpeg','img3.jpeg','img4.jpeg','img5.jpeg','img6.jpeg','img7.jpeg','img8.jpeg','img9.jpeg','img10.jpeg','img11.jpeg','img12.jpeg'  ];
+  const images = [ 'img1.jpeg','img2.jpeg','img3.jpeg','img4.jpeg','img5.jpeg','img6.jpeg','img7.jpeg','img8.jpeg','img9.jpeg','img10.jpeg','img11.jpeg','img12.jpeg' ];
 
   let index = 0;
 
@@ -151,7 +192,7 @@
         index = (index + 1) % images.length;
         slideshow.style.backgroundImage = `url(${images[index]})`;
         slideshow.style.opacity = 1;
-      }, 800); // matches CSS fade duration
+      }, 800);
     }, 3000);
   }
 </script>
