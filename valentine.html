@@ -5,23 +5,23 @@
 <title>Valentine Surprise</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
-/* Reset & basic */
 * { margin:0; padding:0; box-sizing:border-box; font-family:"Poppins", sans-serif; }
 html, body { height:100%; width:100%; overflow:hidden; background:#fff0f6; }
 
-/* Slideshow */
+/* Slideshow background */
 #slideshow { position:fixed; inset:0; z-index:0; background-size:cover; background-position:center; opacity:0; transition: opacity 0.5s ease-in-out; }
 
-/* Splash */
+/* Splash page */
 #splash {
-  z-index:2;
-  position:fixed;
-  inset:0;
   display:flex;
   flex-direction:column;
   align-items:center;
   justify-content:center;
+  height:100vh;
+  width:100vw;
   text-align:center;
+  z-index:2;
+  position:relative;
 }
 #splash h1 { margin-bottom:80px; font-size:3rem; color:#1f1f1f; }
 #enterBtn {
@@ -40,17 +40,18 @@ html, body { height:100%; width:100%; overflow:hidden; background:#fff0f6; }
 /* Card page */
 #card {
   display:none;
-  position:fixed;
-  inset:0;
-  z-index:2;
+  position:relative;
+  height:100vh;
+  width:100vw;
   display:flex;
   flex-direction:column;
   align-items:center;
   justify-content:center;
   text-align:center;
+  z-index:2;
 }
 #card h1 { font-size:2.4rem; margin-bottom:36px; color:#1f1f1f; }
-.buttons { position:relative; } /* container just for layout */
+.buttons { position:relative; width:200px; height:60px; } /* container */
 #yesBtn {
   padding:16px 50px;
   background: linear-gradient(135deg,#ff5c8a,#ff2e63);
@@ -59,6 +60,7 @@ html, body { height:100%; width:100%; overflow:hidden; background:#fff0f6; }
   border-radius:50px;
   cursor:pointer;
   box-shadow:0 18px 40px rgba(255,92,138,0.45);
+  position:relative;
 }
 #yesBtn:hover { transform:translateY(-2px); box-shadow:0 24px 55px rgba(255,92,138,0.6); }
 #noBtn {
@@ -67,12 +69,13 @@ html, body { height:100%; width:100%; overflow:hidden; background:#fff0f6; }
   color:#555;
   border:none;
   border-radius:50px;
-  margin-left:20px;
   cursor:pointer;
-  position:absolute; /* absolute so we can move it freely */
+  position:absolute; /* will move freely */
+  left:120px;
+  top:0;
 }
 
-/* Celebration */
+/* Celebration page */
 #celebration {
   display:none;
   position:fixed;
@@ -99,7 +102,6 @@ html, body { height:100%; width:100%; overflow:hidden; background:#fff0f6; }
 </head>
 <body>
 
-<!-- Slideshow -->
 <div id="slideshow"></div>
 
 <!-- Splash -->
@@ -138,30 +140,24 @@ const song1 = document.getElementById("song1");
 const song2 = document.getElementById("song2");
 const song3 = document.getElementById("song3");
 
-// Slideshow images
 const images = ['img1.jpeg','img2.jpeg','img3.jpeg','img4.jpeg','img5.jpeg','img6.jpeg','img7.jpeg','img8.jpeg','img9.jpeg','img10.jpeg','img11.jpeg','img12.jpeg'];
 let current = 0;
 
-// === ENTER BUTTON ===
+// --- ENTER BUTTON ---
 enterBtn.addEventListener("click", () => {
-  song2.loop = true;
-  song2.volume = 0.5;
-  song2.play().catch(()=>{});
+  song2.loop = true; song2.volume=0.5; song2.play().catch(()=>{});
   splash.style.display = "none";
   card.style.display = "flex";
-
-  // Initialize No button starting position
-  const startX = window.innerWidth/2 + 100;
-  const startY = window.innerHeight/2;
-  noBtn.style.left = startX+"px";
-  noBtn.style.top = startY+"px";
+  // initialize No button inside card
+  noBtn.style.left = (yesBtn.offsetWidth + 20) + "px";
+  noBtn.style.top = "0px";
 });
 
-// === NO BUTTON HOP ===
-let hopInProgress = false;
+// --- NO BUTTON HOP ---
+let hopInProgress=false;
 function hop() {
-  if (hopInProgress) return;
-  hopInProgress = true;
+  if(hopInProgress) return;
+  hopInProgress=true;
 
   const padding = 10;
   const maxX = window.innerWidth - noBtn.offsetWidth - padding;
@@ -169,87 +165,78 @@ function hop() {
 
   const yesRect = yesBtn.getBoundingClientRect();
   let x, y, tries=0;
-
-  do {
+  do{
     x = Math.random()*maxX;
     y = Math.random()*maxY;
     tries++;
-    if (tries>100) break;
-  } while (
+    if(tries>100) break;
+  } while(
     x < yesRect.right + 10 &&
     x + noBtn.offsetWidth > yesRect.left - 10 &&
     y < yesRect.bottom + 10 &&
     y + noBtn.offsetHeight > yesRect.top - 10
   );
 
-  document.body.appendChild(noBtn); // ensure absolute relative to body
+  noBtn.style.position = "absolute"; 
   noBtn.style.left = x + "px";
   noBtn.style.top = y + "px";
 
   // Play song1
-  song2.pause();
-  song3.pause();
-  song1.currentTime=0;
-  song1.play();
+  song2.pause(); song3.pause();
+  song1.currentTime=0; song1.play();
 
-  setTimeout(()=>{ hopInProgress=false; },200);
+  setTimeout(()=>hopInProgress=false,200);
 }
 noBtn.addEventListener("mouseenter", hop);
 noBtn.addEventListener("touchstart", hop);
 
-// === YES BUTTON ===
-yesBtn.addEventListener("click", () => {
+// --- YES BUTTON ---
+yesBtn.addEventListener("click", ()=>{
   card.style.display="none";
   celebration.style.display="flex";
 
-  song1.pause();
-  song2.pause();
-  song3.currentTime=0;
-  song3.play();
+  song1.pause(); song2.pause();
+  song3.currentTime=0; song3.play();
 
   startParticles();
   startSlideshow();
 });
 
-// === PARTICLES ===
-function startParticles() {
+// --- PARTICLES ---
+function startParticles(){
   setInterval(()=>{
     const symbols=["💖","🌹","✨","💐","🎉"];
-    const elem = document.createElement("div");
-    elem.className = Math.random()<0.5?"heart":"confetti";
-    elem.textContent = symbols[Math.floor(Math.random()*symbols.length)];
-    elem.style.left = Math.random()*100 + "vw";
-    elem.style.fontSize = 18 + Math.random()*18 + "px";
-    elem.style.animationDuration = 4 + Math.random()*3 + "s";
+    const elem=document.createElement("div");
+    elem.className=Math.random()<0.5?"heart":"confetti";
+    elem.textContent=symbols[Math.floor(Math.random()*symbols.length)];
+    elem.style.left=Math.random()*100+"vw";
+    elem.style.fontSize=18 + Math.random()*18 + "px";
+    elem.style.animationDuration = 4+Math.random()*3+"s";
     document.body.appendChild(elem);
     setTimeout(()=>elem.remove(),9000);
   },200);
 }
 
-// === SLIDESHOW WITH NO BLACK GAPS ===
-function startSlideshow() {
-  slideshow.style.zIndex = 1;
-  slideshow.style.opacity = 1;
-  slideshow.style.backgroundImage = `url(${images[current]})`;
+// --- SLIDESHOW ---
+function startSlideshow(){
+  slideshow.style.zIndex=1;
+  slideshow.style.opacity=1;
+  slideshow.style.backgroundImage=`url(${images[current]})`;
 
-  function nextSlide() {
+  function nextSlide(){
     current = (current + 1) % images.length;
     const nextImage = images[current];
+    slideshow.style.transition='opacity 0.5s ease-in-out';
+    slideshow.style.opacity=0;
 
-    // fade out current a little
-    slideshow.style.transition = 'opacity 0.5s ease-in-out';
-    slideshow.style.opacity = 0;
-
-    // swap halfway for smooth crossfade
     setTimeout(()=>{
-      slideshow.style.backgroundImage = `url(${nextImage})`;
-      slideshow.style.opacity = 1;
-    }, 250);
+      slideshow.style.backgroundImage=`url(${nextImage})`;
+      slideshow.style.opacity=1;
+    },250);
 
-    setTimeout(nextSlide, 3000);
+    setTimeout(nextSlide,3000);
   }
-
-  setTimeout(nextSlide, 3000);
+  setTimeout(nextSlide,3000);
 }
 </script>
 </body>
