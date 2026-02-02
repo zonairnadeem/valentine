@@ -35,6 +35,13 @@
       display: none;
       font-size: 2em;
       margin-top: 30px;
+
+      body.bg {
+        background-image: url("AU208731.jpg");
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+      }
     }
   </style>
 </head>
@@ -93,8 +100,9 @@
   noBtn.addEventListener("touchstart", hop);
 
   function yesClicked() {
+    document.body.classList.add("bg");
     document.getElementById("flowers").style.display = "block";
-    noBtn.style.display = "none";
+    document.getElementById("noBtn").style.display = "none";
   }
   </script>
 
