@@ -5,104 +5,96 @@
 <title>Valentine Surprise</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
-:root {
-  --pink-soft: #fff0f6;
-  --text-dark: #1f1f1f;
-  --ease: cubic-bezier(0.22, 1, 0.36, 1);
-}
+/* Reset and basic */
 * { margin:0; padding:0; box-sizing:border-box; font-family:"Poppins", sans-serif; }
-body { overflow:hidden; height:100vh; background:var(--pink-soft); }
+html, body { height:100%; width:100%; overflow:hidden; background:#fff0f6; }
 
-/* Common button style */
-button {
-  cursor:pointer;
-  border:none;
-  border-radius:50px;
-  font-weight:600;
-  transition: transform 0.25s var(--ease), box-shadow 0.25s var(--ease);
-}
-
-/* BACKGROUND SLIDESHOW */
+/* Slideshow background */
 #slideshow {
-  position: fixed;
+  position:fixed;
   inset:0;
   z-index:0;
-  background-size: cover;
-  background-position: center;
+  background-size:cover;
+  background-position:center;
   opacity:0;
   transition: opacity 0.5s ease-in-out;
 }
 
-/* SPLASH PAGE */
+/* Splash page */
 #splash {
+  position:relative;
+  z-index:2;
   display:flex;
   flex-direction:column;
   align-items:center;
   justify-content:center;
   height:100vh;
+  width:100vw;
   text-align:center;
-  z-index:2;
-  padding: 20px;
+  pointer-events:auto;
 }
-
-#splash h1 {
-  font-size:3rem;
-  margin-bottom:80px; /* leave space for button */
-}
-
+#splash h1 { margin-bottom:80px; font-size:3rem; color:#1f1f1f; }
 #enterBtn {
   padding:16px 50px;
   font-size:1.3rem;
-  background: linear-gradient(135deg,#ff5c8a,#ff2e63);
+  border:none;
+  border-radius:50px;
+  background:linear-gradient(135deg,#ff5c8a,#ff2e63);
   color:white;
+  cursor:pointer;
   box-shadow:0 12px 30px rgba(255,92,138,0.45);
+  transition: transform 0.25s, box-shadow 0.25s;
 }
 #enterBtn:hover { transform:translateY(-2px); box-shadow:0 18px 40px rgba(255,92,138,0.6); }
 
-/* CARD */
+/* Card page */
 #card {
   display:none;
+  position:relative;
+  z-index:2;
+  height:100vh;
+  width:100vw;
+  display:flex;
   flex-direction:column;
   align-items:center;
   justify-content:center;
-  height:100vh;
   text-align:center;
-  z-index:2;
-  padding:20px;
-  position:relative;
 }
-
-h1.main { font-size:2.4rem; margin-bottom:36px; color:var(--text-dark); }
-
+#card h1 { font-size:2.4rem; margin-bottom:36px; color:#1f1f1f; }
+.buttons { display:flex; margin-top:20px; position:relative; }
 #yesBtn {
   padding:16px 50px;
   background: linear-gradient(135deg,#ff5c8a,#ff2e63);
   color:white;
+  border:none;
+  border-radius:50px;
   box-shadow:0 18px 40px rgba(255,92,138,0.45);
+  cursor:pointer;
 }
-#yesBtn:hover { transform: translateY(-2px); box-shadow:0 24px 55px rgba(255,92,138,0.6); }
-
+#yesBtn:hover { transform:translateY(-2px); box-shadow:0 24px 55px rgba(255,92,138,0.6); }
 #noBtn {
   padding:16px 50px;
   background:#f2f2f2;
   color:#555;
-  box-shadow:0 8px 18px rgba(0,0,0,0.15);
+  border:none;
+  border-radius:50px;
   margin-left:20px;
-  position:relative; /* so transform stays inside container */
+  position:relative;
+  cursor:pointer;
 }
 
-/* Buttons container */
-.buttons { margin-top:20px; position:relative; }
-
-/* CELEBRATION */
+/* Celebration page */
 #celebration {
   display:none;
+  position:relative;
+  z-index:2;
+  height:100vh;
+  width:100vw;
+  display:flex;
   flex-direction:column;
   align-items:center;
   justify-content:center;
-  height:100vh;
   text-align:center;
-  z-index:2;
 }
 
 /* Hearts/confetti */
@@ -114,37 +106,33 @@ h1.main { font-size:2.4rem; margin-bottom:36px; color:var(--text-dark); }
   filter: drop-shadow(0 6px 12px rgba(0,0,0,0.25));
   z-index:3;
 }
-@keyframes floatUp {
-  0%{transform:translateY(0) scale(0.9);opacity:0;}
-  10%{opacity:1;}
-  100%{transform:translateY(-120vh) scale(1.8);opacity:0;}
-}
+@keyframes floatUp {0%{transform:translateY(0) scale(0.9);opacity:0;}10%{opacity:1;}100%{transform:translateY(-120vh) scale(1.8);opacity:0;}}
 </style>
 </head>
 <body>
 
-<!-- BACKGROUND SLIDESHOW -->
+<!-- Slideshow background -->
 <div id="slideshow"></div>
 
-<!-- SPLASH -->
+<!-- Splash page -->
 <div id="splash">
   <h1>A little surprise for someone special… 💖</h1>
   <button id="enterBtn">ENTER</button>
 </div>
 
-<!-- CARD -->
+<!-- Card page -->
 <div id="card">
-  <h1 class="main">Will you be my Valentine?</h1>
+  <h1>Will you be my Valentine?</h1>
   <div class="buttons">
     <button id="yesBtn">Yes</button>
     <button id="noBtn">No</button>
   </div>
 </div>
 
-<!-- CELEBRATION -->
+<!-- Celebration page -->
 <div id="celebration"></div>
 
-<!-- AUDIO -->
+<!-- Audio -->
 <audio id="song1" src="song1.mp3" preload="auto"></audio>
 <audio id="song2" src="song2.mp3" preload="auto"></audio>
 <audio id="song3" src="song3.mp3" preload="auto"></audio>
@@ -154,47 +142,45 @@ h1.main { font-size:2.4rem; margin-bottom:36px; color:var(--text-dark); }
 const splash = document.getElementById("splash");
 const enterBtn = document.getElementById("enterBtn");
 const card = document.getElementById("card");
-const celebration = document.getElementById("celebration");
 const yesBtn = document.getElementById("yesBtn");
 const noBtn = document.getElementById("noBtn");
+const celebration = document.getElementById("celebration");
 const slideshow = document.getElementById("slideshow");
 
 const song1 = document.getElementById("song1");
 const song2 = document.getElementById("song2");
 const song3 = document.getElementById("song3");
 
-// IMAGE LIST
-const images = [
-  'img1.jpg','img2.jpg','img3.jpg','img4.jpg','img5.jpg',
-  'img6.jpg','img7.jpg','img8.jpg','img9.jpg','img10.jpg'
-];
+// Slideshow images
+const images = ['img1.jpg','img2.jpg','img3.jpg','img4.jpg','img5.jpg','img6.jpg','img7.jpg','img8.jpg','img9.jpg','img10.jpg'];
 
-// === ENTER CLICK ===
-enterBtn.addEventListener("click", ()=>{
-  splash.style.display="none";
-  card.style.display="flex";
-
-  // play song2 after user gesture
+// === ENTER BUTTON ===
+enterBtn.addEventListener("click", () => {
+  // Play song2 directly on user gesture
   song2.loop = true;
   song2.volume = 0.5;
-  song2.play().catch(()=>{});
+  const p = song2.play();
+  if(p !== undefined) p.catch(e=>console.log("Audio blocked"));
+
+  // Show card
+  splash.style.display = "none";
+  card.style.display = "flex";
 });
 
 // === NO BUTTON HOP ===
-let noX = 0, noY = 0;
+noBtn.addEventListener("mouseenter", hop);
+noBtn.addEventListener("touchstart", hop);
 function hop(){
-  const stepX = Math.random()*200-100;
-  const stepY = Math.random()*50-25;
-  noBtn.style.transform = `translate(${stepX}px, ${stepY}px)`;
+  const dx = Math.random()*200-100;
+  const dy = Math.random()*50-25;
+  noBtn.style.transform = `translate(${dx}px, ${dy}px)`;
 
   song2.pause(); song3.pause();
   song1.currentTime=0; song1.play();
 }
-noBtn.addEventListener("mouseenter", hop);
-noBtn.addEventListener("touchstart", hop);
 
-// === YES CLICK ===
-yesBtn.addEventListener("click", ()=>{
+// === YES BUTTON ===
+yesBtn.addEventListener("click", () => {
   card.style.display="none";
   celebration.style.display="flex";
 
@@ -205,10 +191,10 @@ yesBtn.addEventListener("click", ()=>{
   startSlideshow();
 });
 
-// PARTICLES
+// === PARTICLES ===
 function startParticles(){
   setInterval(()=>{
-    const symbols = ["💖","🌹","✨","💐","🎉"];
+    const symbols=["💖","🌹","✨","💐","🎉"];
     const elem = document.createElement("div");
     elem.className = Math.random()<0.5?"heart":"confetti";
     elem.textContent = symbols[Math.floor(Math.random()*symbols.length)];
@@ -220,18 +206,18 @@ function startParticles(){
   },200);
 }
 
-// SLIDESHOW
-let current=0;
+// === SLIDESHOW ===
+let current = 0;
 function startSlideshow(){
-  slideshow.style.opacity=1;
-  slideshow.style.backgroundImage=`url(${images[current]})`;
+  slideshow.style.opacity = 1;
+  slideshow.style.backgroundImage = `url(${images[current]})`;
 
   setInterval(()=>{
     current = (current+1) % images.length;
-    slideshow.style.opacity=0;
+    slideshow.style.opacity = 0;
     setTimeout(()=>{
-      slideshow.style.backgroundImage=`url(${images[current]})`;
-      slideshow.style.opacity=1;
+      slideshow.style.backgroundImage = `url(${images[current]})`;
+      slideshow.style.opacity = 1;
     },500);
   }, 3000);
 }
