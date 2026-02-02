@@ -208,18 +208,31 @@ function startParticles(){
 
 // === SLIDESHOW ===
 let current = 0;
-function startSlideshow(){
+
+function startSlideshow() {
+  slideshow.style.zIndex = 1;
   slideshow.style.opacity = 1;
   slideshow.style.backgroundImage = `url(${images[current]})`;
 
-  setInterval(()=>{
-    current = (current+1) % images.length;
+  function nextSlide() {
+    // fade out
     slideshow.style.opacity = 0;
-    setTimeout(()=>{
+
+    // after fade out (0.5s), change image and fade in
+    setTimeout(() => {
+      current = (current + 1) % images.length;
       slideshow.style.backgroundImage = `url(${images[current]})`;
       slideshow.style.opacity = 1;
-    },500);
-  }, 3000);
+
+      // show image for 3s then move to next
+      setTimeout(nextSlide, 3000);
+    }, 500); // match CSS fade duration
+  }
+
+  // start the loop after first image is shown for 3s
+  setTimeout(nextSlide, 3000);
+}
+
 }
 </script>
 </body>
