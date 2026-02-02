@@ -167,20 +167,25 @@ enterBtn.addEventListener("click", () => {
 // === NO BUTTON HOP ===
 noBtn.addEventListener("mouseenter", hop);
 noBtn.addEventListener("touchstart", hop);
+
+let hopInProgress = false;
+
 function hop() {
+  if (hopInProgress) return; // prevent multiple triggers
+  hopInProgress = true;
+
   const padding = 10;
   const maxX = window.innerWidth - noBtn.offsetWidth - padding;
   const maxY = window.innerHeight - noBtn.offsetHeight - padding;
 
-  // Get Yes button bounds
   const yesRect = yesBtn.getBoundingClientRect();
-
   let x, y, tries = 0;
+
   do {
     x = Math.random() * maxX;
     y = Math.random() * maxY;
     tries++;
-    if (tries > 100) break; // safety
+    if (tries > 100) break;
   } while (
     x < yesRect.right + 10 &&
     x + noBtn.offsetWidth > yesRect.left - 10 &&
@@ -188,7 +193,7 @@ function hop() {
     y + noBtn.offsetHeight > yesRect.top - 10
   );
 
-  noBtn.style.position = "absolute"; // make sure absolute
+  noBtn.style.position = "absolute";
   noBtn.style.left = x + "px";
   noBtn.style.top = y + "px";
 
@@ -197,7 +202,15 @@ function hop() {
   song3.pause();
   song1.currentTime = 0;
   song1.play();
+
+  // small delay before allowing next hop
+  setTimeout(() => { hopInProgress = false; }, 200);
 }
+
+// Attach events
+noBtn.addEventListener("mouseenter", hop);
+noBtn.addEventListener("touchstart", hop);
+
 
 
 
