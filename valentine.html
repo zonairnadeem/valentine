@@ -23,13 +23,14 @@
       justify-content: center;
       overflow: hidden;
       position: relative;
+      cursor: pointer;
     }
 
-    /* ==== Background ==== */
+    /* Background */
     #bg {
       position: fixed;
       inset: 0;
-      background-image: url("valentine.jpg");
+      background-image: url("valentine.JPG");
       background-size: cover;
       background-position: center;
       opacity: 0;
@@ -46,7 +47,7 @@
                   linear-gradient(to bottom, rgba(0,0,0,0.35), rgba(0,0,0,0.55));
     }
 
-    /* ==== Glass Card ==== */
+    /* Card */
     .card {
       position: relative;
       z-index: 2;
@@ -63,7 +64,7 @@
 
     h1 { margin-bottom: 36px; font-size: 2.4rem; font-weight: 600; color: var(--text-dark); letter-spacing: -0.02em; }
 
-    /* ==== Buttons ==== */
+    /* Buttons */
     .buttons { position: relative; height: 120px; }
     button {
       position: absolute;
@@ -85,7 +86,7 @@
     #yesBtn:hover { transform: translateX(-50%) translateY(-2px); box-shadow: 0 24px 55px rgba(255,92,138,0.6); }
     #noBtn { background: #f2f2f2; color: #555; box-shadow: 0 8px 18px rgba(0,0,0,0.15); }
 
-    /* ==== Celebration ==== */
+    /* Celebration overlay */
     #celebration { display: none; position: relative; z-index: 3; text-align: center; pointer-events: none; color: white; }
     #celebration h2 {
       font-size: 3.8rem;
@@ -105,7 +106,7 @@
     @keyframes headlineIn { to { opacity:1; transform:scale(1);} }
     @keyframes subtextIn { to { opacity:1; transform:translateY(0);} }
 
-    /* ==== Floating Hearts & Confetti ==== */
+    /* Floating hearts/confetti */
     .heart, .confetti { position: fixed; bottom: -60px; pointer-events: none; animation: floatUp linear forwards; filter: drop-shadow(0 6px 12px rgba(0,0,0,0.25)); z-index: 2; }
     @keyframes floatUp { 0%{transform:translateY(0) scale(0.9);opacity:0;} 10%{opacity:1;} 100%{transform:translateY(-120vh) scale(1.8);opacity:0;} }
 
@@ -128,7 +129,7 @@
     <p>This just made my day so happy 🥰</p>
   </div>
 
-  <!-- Audio -->
+  <!-- Audio files -->
   <audio id="song1" src="song1.mp3" preload="auto"></audio>
   <audio id="song2" src="song2.mp3" preload="auto"></audio>
   <audio id="song3" src="song3.mp3" preload="auto"></audio>
@@ -141,19 +142,23 @@
     const bg = document.getElementById("bg");
     const celebration = document.getElementById("celebration");
 
-    // AUDIO
     const song1 = document.getElementById("song1");
     const song2 = document.getElementById("song2");
     const song3 = document.getElementById("song3");
 
-    // Start song2 when page loads (needs user interaction on mobile)
-    window.addEventListener("load", () => {
-      song2.loop = true;
-      song2.volume = 0.5;
-      song2.play().catch(()=>{}); // fallback in case browser blocks autoplay
-    });
+    // Start song2 after first user interaction
+    let audioStarted = false;
+    document.body.addEventListener("click", startAudio, { once: true });
+    function startAudio() {
+      if(!audioStarted) {
+        song2.loop = true;
+        song2.volume = 0.5;
+        song2.play().catch(()=>{}); // fallback
+        audioStarted = true;
+      }
+    }
 
-    // INITIAL NO BUTTON POSITION
+    // Initial No button position
     let x = arena.offsetWidth/2 - noBtn.offsetWidth/2;
     let y = 70;
     noBtn.style.left = x + "px";
@@ -168,8 +173,9 @@
       noBtn.style.left = x + "px";
       noBtn.style.top = y + "px";
 
-      // PLAY song1 when hopping
-      song2.pause(); // stop background
+      // Play song1 when No hops
+      song2.pause();
+      song3.pause();
       song1.currentTime = 0;
       song1.play();
     }
@@ -177,7 +183,7 @@
     noBtn.addEventListener("mouseenter", hop);
     noBtn.addEventListener("touchstart", hop);
 
-    yesBtn.addEventListener("click", () => {
+    yesBtn.addEventListener("click", ()=>{
       bg.classList.add("show");
       card.classList.add("fade");
 
@@ -185,17 +191,16 @@
         card.style.display="none";
         celebration.style.display="block";
 
-        // PLAY song3
-        song2.pause();
+        // Play song3
         song1.pause();
-        song3.currentTime = 0;
+        song2.pause();
+        song3.currentTime=0;
         song3.play();
 
         startParticles();
       },700);
     });
 
-    // PARTICLES
     function startParticles() {
       setInterval(()=>{
         const symbols=["💖","🌹","✨","💐","🎉"];
@@ -209,6 +214,7 @@
         setTimeout(()=>elem.remove(),9000);
       },200);
     }
+
   </script>
 </body>
 </html>
