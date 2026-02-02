@@ -86,23 +86,24 @@ button {
   position: absolute;
   bottom: -30px;
   font-size: 24px;
-  pointer-events: none; /* IMPORTANT: never blocks clicks */
+  pointer-events: none;
   animation: floatUp linear forwards;
   opacity: 0.8;
 }
 
 @keyframes floatUp {
-  0% {
-    transform: translateY(0) scale(1);
-    opacity: 0;
-  }
-  10% {
-    opacity: 1;
-  }
-  100% {
-    transform: translateY(-120vh) scale(1.4);
-    opacity: 0;
-  }
+  0% { transform: translateY(0) scale(1); opacity: 0; }
+  10% { opacity: 1; }
+  100% { transform: translateY(-120vh) scale(1.4); opacity: 0; }
+}
+
+/* 🔁 REPLAY BUTTON */
+#replayBtn {
+  position: absolute;
+  bottom: 30px;
+  background: rgba(0,0,0,0.6);
+  color: white;
+  border: 2px solid white;
 }
 </style>
 </head>
@@ -132,6 +133,7 @@ button {
 <!-- SCREEN 3 -->
 <div id="screen3" class="screen">
   <div id="slideshow"></div>
+  <button id="replayBtn">Replay 🔁</button>
 </div>
 
 <script>
@@ -142,6 +144,7 @@ const screen3 = document.getElementById("screen3");
 const enterBtn = document.getElementById("enterBtn");
 const yesBtn = document.getElementById("yesBtn");
 const noBtn = document.getElementById("noBtn");
+const replayBtn = document.getElementById("replayBtn");
 
 const song1 = document.getElementById("song1");
 const song2 = document.getElementById("song2");
@@ -173,11 +176,8 @@ function hop() {
   const maxX = 160;
   const maxY = 80;
 
-  const x = Math.random() * maxX;
-  const y = Math.random() * maxY;
-
-  noBtn.style.left = x + "px";
-  noBtn.style.top = y + "px";
+  noBtn.style.left = Math.random() * maxX + "px";
+  noBtn.style.top = Math.random() * maxY + "px";
 }
 
 noBtn.addEventListener("mouseenter", hop);
@@ -190,11 +190,16 @@ yesBtn.onclick = () => {
   song3.volume = 0.7;
   song3.play();
   startSlideshow();
-  startHearts(); // ❤️ added safely
+  startHearts();
+};
+
+// 🔁 REPLAY
+replayBtn.onclick = () => {
+  location.reload();
 };
 
 // SLIDESHOW
-const images =[ 'img1.jpeg','img2.jpeg','img3.jpeg','img4.jpeg','img5.jpeg','img6.jpeg','img7.jpeg','img8.jpeg','img9.jpeg','img10.jpeg','img11.jpeg','img12.jpeg' ];
+const images = [ 'img1.jpeg','img2.jpeg','img3.jpeg','img4.jpeg','img5.jpeg','img6.jpeg','img7.jpeg','img8.jpeg','img9.jpeg','img10.jpeg','img11.jpeg','img12.jpeg' ];
 
 let index = 0;
 
@@ -203,7 +208,6 @@ function startSlideshow() {
 
   setInterval(() => {
     slideshow.style.opacity = 0;
-
     setTimeout(() => {
       index = (index + 1) % images.length;
       slideshow.style.backgroundImage = `url(${images[index]})`;
@@ -212,22 +216,17 @@ function startSlideshow() {
   }, 3000);
 }
 
-// ❤️ HEART GENERATOR
+// ❤️ HEARTS
 function startHearts() {
   setInterval(() => {
     const heart = document.createElement("div");
     heart.className = "heart";
     heart.textContent = "💖";
-
     heart.style.left = Math.random() * 100 + "vw";
     heart.style.fontSize = 18 + Math.random() * 22 + "px";
     heart.style.animationDuration = 6 + Math.random() * 4 + "s";
-
     document.body.appendChild(heart);
-
-    setTimeout(() => {
-      heart.remove();
-    }, 10000);
+    setTimeout(() => heart.remove(), 10000);
   }, 400);
 }
 </script>
