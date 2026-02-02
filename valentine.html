@@ -42,11 +42,12 @@ button {
   height:100vh;
   text-align:center;
   z-index:2;
+  padding: 20px;
 }
 
 #splash h1 {
   font-size:3rem;
-  margin-bottom:60px;
+  margin-bottom:120px; /* leave space for button */
 }
 
 #enterBtn {
@@ -55,6 +56,8 @@ button {
   background: linear-gradient(135deg,#ff5c8a,#ff2e63);
   color:white;
   box-shadow:0 12px 30px rgba(255,92,138,0.45);
+  z-index:3;
+  position: relative;
 }
 #enterBtn:hover { transform:translateY(-2px); box-shadow:0 18px 40px rgba(255,92,138,0.6); }
 
@@ -66,6 +69,8 @@ button {
   justify-content:center;
   height:100vh;
   text-align:center;
+  z-index:2;
+  padding:20px;
 }
 
 h1.main { font-size:2.4rem; margin-bottom:36px; color:var(--text-dark); }
@@ -100,7 +105,7 @@ h1.main { font-size:2.4rem; margin-bottom:36px; color:var(--text-dark); }
 
 <!-- SPLASH -->
 <div id="splash">
-  <h1>A little surprise for someone special… 💖</h1>
+  <h1>Version 6 A little surprise for someone special… 💖</h1>
   <button id="enterBtn">ENTER</button>
 </div>
 
@@ -146,8 +151,13 @@ enterBtn.addEventListener("click", ()=>{
   splash.style.display="none";
   card.style.display="flex";
 
-  song2.loop=true; song2.volume=0.5;
-  song2.play().catch(()=>{});
+  // play song2 only after user gesture
+  song2.loop=true;
+  song2.volume=0.5;
+  const playPromise = song2.play();
+  if (playPromise !== undefined) {
+      playPromise.catch(error=>{console.log("Autoplay blocked, will play after user interaction");});
+  }
 });
 
 // === NO HOP ===
