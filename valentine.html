@@ -22,7 +22,7 @@ button {
   transition: transform 0.25s var(--ease), box-shadow 0.25s var(--ease);
 }
 
-/* === BACKGROUND SLIDESHOW === */
+/* BACKGROUND SLIDESHOW */
 #slideshow {
   position: fixed;
   inset:0;
@@ -33,7 +33,7 @@ button {
   transition: opacity 0.5s ease-in-out;
 }
 
-/* === SPLASH === */
+/* SPLASH PAGE */
 #splash {
   display:flex;
   flex-direction:column;
@@ -47,7 +47,7 @@ button {
 
 #splash h1 {
   font-size:3rem;
-  margin-bottom:120px; /* leave space for button */
+  margin-bottom:80px; /* leave space for button */
 }
 
 #enterBtn {
@@ -56,12 +56,10 @@ button {
   background: linear-gradient(135deg,#ff5c8a,#ff2e63);
   color:white;
   box-shadow:0 12px 30px rgba(255,92,138,0.45);
-  z-index:3;
-  position: relative;
 }
 #enterBtn:hover { transform:translateY(-2px); box-shadow:0 18px 40px rgba(255,92,138,0.6); }
 
-/* === CARD === */
+/* CARD */
 #card {
   display:none;
   flex-direction:column;
@@ -71,18 +69,32 @@ button {
   text-align:center;
   z-index:2;
   padding:20px;
+  position:relative;
 }
 
 h1.main { font-size:2.4rem; margin-bottom:36px; color:var(--text-dark); }
 
-#yesBtn { padding:16px 50px; background: linear-gradient(135deg,#ff5c8a,#ff2e63); color:white; box-shadow:0 18px 40px rgba(255,92,138,0.45);}
-#yesBtn:hover { transform: translateY(-2px); box-shadow:0 24px 55px rgba(255,92,138,0.6);}
-#noBtn { padding:16px 50px; background:#f2f2f2; color:#555; box-shadow:0 8px 18px rgba(0,0,0,0.15); margin-left:20px;}
+#yesBtn {
+  padding:16px 50px;
+  background: linear-gradient(135deg,#ff5c8a,#ff2e63);
+  color:white;
+  box-shadow:0 18px 40px rgba(255,92,138,0.45);
+}
+#yesBtn:hover { transform: translateY(-2px); box-shadow:0 24px 55px rgba(255,92,138,0.6); }
+
+#noBtn {
+  padding:16px 50px;
+  background:#f2f2f2;
+  color:#555;
+  box-shadow:0 8px 18px rgba(0,0,0,0.15);
+  margin-left:20px;
+  position:relative; /* so transform stays inside container */
+}
 
 /* Buttons container */
-.buttons { margin-top:20px; }
+.buttons { margin-top:20px; position:relative; }
 
-/* === CELEBRATION === */
+/* CELEBRATION */
 #celebration {
   display:none;
   flex-direction:column;
@@ -94,18 +106,29 @@ h1.main { font-size:2.4rem; margin-bottom:36px; color:var(--text-dark); }
 }
 
 /* Hearts/confetti */
-.heart,.confetti { position: fixed; bottom:-60px; pointer-events:none; animation: floatUp linear forwards; filter: drop-shadow(0 6px 12px rgba(0,0,0,0.25)); z-index:3;}
-@keyframes floatUp {0%{transform:translateY(0) scale(0.9);opacity:0;}10%{opacity:1;}100%{transform:translateY(-120vh) scale(1.8);opacity:0;}}
+.heart,.confetti {
+  position: fixed;
+  bottom:-60px;
+  pointer-events:none;
+  animation: floatUp linear forwards;
+  filter: drop-shadow(0 6px 12px rgba(0,0,0,0.25));
+  z-index:3;
+}
+@keyframes floatUp {
+  0%{transform:translateY(0) scale(0.9);opacity:0;}
+  10%{opacity:1;}
+  100%{transform:translateY(-120vh) scale(1.8);opacity:0;}
+}
 </style>
 </head>
 <body>
 
-<!-- BACKGROUND -->
+<!-- BACKGROUND SLIDESHOW -->
 <div id="slideshow"></div>
 
 <!-- SPLASH -->
 <div id="splash">
-  <h1>Version 6 A little surprise for someone special… 💖</h1>
+  <h1>A little surprise for someone special… 💖</h1>
   <button id="enterBtn">ENTER</button>
 </div>
 
@@ -140,7 +163,7 @@ const song1 = document.getElementById("song1");
 const song2 = document.getElementById("song2");
 const song3 = document.getElementById("song3");
 
-// === IMAGE LIST ===
+// IMAGE LIST
 const images = [
   'img1.jpg','img2.jpg','img3.jpg','img4.jpg','img5.jpg',
   'img6.jpg','img7.jpg','img8.jpg','img9.jpg','img10.jpg'
@@ -151,22 +174,18 @@ enterBtn.addEventListener("click", ()=>{
   splash.style.display="none";
   card.style.display="flex";
 
-  // play song2 only after user gesture
-  song2.loop=true;
-  song2.volume=0.5;
-  const playPromise = song2.play();
-  if (playPromise !== undefined) {
-      playPromise.catch(error=>{console.log("Autoplay blocked, will play after user interaction");});
-  }
+  // play song2 after user gesture
+  song2.loop = true;
+  song2.volume = 0.5;
+  song2.play().catch(()=>{});
 });
 
-// === NO HOP ===
-let x=0, y=0;
+// === NO BUTTON HOP ===
+let noX = 0, noY = 0;
 function hop(){
-  const step=90;
-  x=(Math.random()*200-100);
-  y=(Math.random()*50-25);
-  noBtn.style.transform=`translate(${x}px, ${y}px)`;
+  const stepX = Math.random()*200-100;
+  const stepY = Math.random()*50-25;
+  noBtn.style.transform = `translate(${stepX}px, ${stepY}px)`;
 
   song2.pause(); song3.pause();
   song1.currentTime=0; song1.play();
@@ -186,22 +205,22 @@ yesBtn.addEventListener("click", ()=>{
   startSlideshow();
 });
 
-// === PARTICLES ===
+// PARTICLES
 function startParticles(){
   setInterval(()=>{
-    const symbols=["💖","🌹","✨","💐","🎉"];
-    const elem=document.createElement("div");
+    const symbols = ["💖","🌹","✨","💐","🎉"];
+    const elem = document.createElement("div");
     elem.className = Math.random()<0.5?"heart":"confetti";
     elem.textContent = symbols[Math.floor(Math.random()*symbols.length)];
-    elem.style.left=Math.random()*100+"vw";
-    elem.style.fontSize=18+Math.random()*18+"px";
-    elem.style.animationDuration=4+Math.random()*3+"s";
+    elem.style.left = Math.random()*100 + "vw";
+    elem.style.fontSize = 18 + Math.random()*18 + "px";
+    elem.style.animationDuration = 4 + Math.random()*3 + "s";
     document.body.appendChild(elem);
     setTimeout(()=>elem.remove(),9000);
   },200);
 }
 
-// === SLIDESHOW ===
+// SLIDESHOW
 let current=0;
 function startSlideshow(){
   slideshow.style.opacity=1;
@@ -213,8 +232,8 @@ function startSlideshow(){
     setTimeout(()=>{
       slideshow.style.backgroundImage=`url(${images[current]})`;
       slideshow.style.opacity=1;
-    },500); // fade transition
-  }, 3000); // 3 seconds per image
+    },500);
+  }, 3000);
 }
 </script>
 </body>
