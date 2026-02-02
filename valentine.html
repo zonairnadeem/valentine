@@ -164,7 +164,7 @@ const originalBg = document.body.style.background;
 function flashNoBackground() {
   if (bgTimeout) clearTimeout(bgTimeout);
 
-  document.body.style.background = "url('no-bg.png') center / cover no-repeat";
+  document.body.style.background = "url('no-bg.png') no-repeat center center / cover fixed";
 
   bgTimeout = setTimeout(() => {
     document.body.style.background = originalBg || "#fff0f5";
