@@ -2,28 +2,33 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Valentine?</title>
+  <title>Valentine</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <style>
     :root {
-      --pink-soft: #fff0f5;
-      --pink-accent: #ff5c8a;
-      --text-dark: #2b2b2b;
+      --pink: #ff4f81;
+      --pink-soft: #fff0f6;
+      --text-dark: #1f1f1f;
+      --ease: cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    * {
+      box-sizing: border-box;
     }
 
     body {
       margin: 0;
       min-height: 100vh;
-      font-family: "Poppins", "Segoe UI", system-ui, sans-serif;
-      background-color: var(--pink-soft);
+      font-family: "Poppins", "Inter", system-ui, sans-serif;
+      background: var(--pink-soft);
       display: flex;
       align-items: center;
       justify-content: center;
       overflow: hidden;
     }
 
-    /* Background */
+    /* ===== BACKGROUND ===== */
     #bg {
       position: fixed;
       inset: 0;
@@ -31,64 +36,69 @@
       background-size: cover;
       background-position: center;
       opacity: 0;
-      transition: opacity 1s ease;
+      transform: scale(1.08);
+      transition: opacity 1.4s ease, transform 6s linear;
       z-index: 0;
     }
 
     #bg.show {
       opacity: 1;
+      transform: scale(1);
     }
 
     #bg::after {
       content: "";
       position: absolute;
       inset: 0;
-      background: linear-gradient(
-        to bottom,
-        rgba(0,0,0,0.25),
-        rgba(0,0,0,0.45)
-      );
+      background:
+        radial-gradient(circle at top, rgba(255,255,255,0.15), transparent 60%),
+        linear-gradient(to bottom, rgba(0,0,0,0.35), rgba(0,0,0,0.55));
     }
 
-    /* Card */
+    /* ===== CARD ===== */
     .card {
       position: relative;
       z-index: 2;
-      background: rgba(255,255,255,0.92);
-      backdrop-filter: blur(12px);
-      border-radius: 20px;
-      padding: 50px 40px 60px;
       width: 420px;
+      padding: 56px 44px 64px;
+      border-radius: 28px;
+      background: rgba(255,255,255,0.88);
+      backdrop-filter: blur(20px);
+      box-shadow:
+        0 40px 80px rgba(0,0,0,0.18),
+        inset 0 1px 0 rgba(255,255,255,0.5);
       text-align: center;
-      box-shadow: 0 30px 60px rgba(0,0,0,0.18);
-      transition: transform 0.6s ease, opacity 0.6s ease;
+      transition: opacity 0.8s ease, transform 0.8s ease;
     }
 
     .card.fade {
-      transform: translateY(30px);
       opacity: 0;
+      transform: translateY(40px) scale(0.96);
     }
 
     h1 {
-      margin-bottom: 30px;
-      font-size: 2.2rem;
+      margin: 0 0 36px;
+      font-size: 2.4rem;
       font-weight: 600;
       color: var(--text-dark);
+      letter-spacing: -0.02em;
     }
 
+    /* ===== BUTTON AREA ===== */
     .buttons {
       position: relative;
-      height: 110px;
+      height: 120px;
     }
 
     button {
-      font-size: 1.1rem;
-      padding: 14px 36px;
-      border-radius: 999px;
+      position: absolute;
       border: none;
       cursor: pointer;
+      padding: 16px 42px;
+      font-size: 1.1rem;
       font-weight: 500;
-      position: absolute;
+      border-radius: 999px;
+      transition: transform 0.25s var(--ease), box-shadow 0.25s var(--ease);
     }
 
     #yesBtn {
@@ -96,63 +106,80 @@
       transform: translateX(-50%);
       background: linear-gradient(135deg, #ff5c8a, #ff2e63);
       color: white;
-      box-shadow: 0 10px 25px rgba(255, 92, 138, 0.4);
+      box-shadow:
+        0 18px 40px rgba(255, 92, 138, 0.45);
+    }
+
+    #yesBtn:hover {
+      transform: translateX(-50%) translateY(-2px);
+      box-shadow:
+        0 24px 55px rgba(255, 92, 138, 0.6);
     }
 
     #noBtn {
-      background: #f3f3f3;
+      background: #f2f2f2;
       color: #555;
-      box-shadow: 0 6px 14px rgba(0,0,0,0.15);
+      box-shadow: 0 8px 18px rgba(0,0,0,0.15);
     }
 
-    /* Celebration text */
+    /* ===== CELEBRATION ===== */
     #celebration {
       display: none;
       position: relative;
       z-index: 3;
       text-align: center;
       color: white;
-      animation: popIn 1s ease forwards;
+      animation: riseIn 1.2s var(--ease) forwards;
     }
 
     #celebration h2 {
-      font-size: 3rem;
+      font-size: 3.6rem;
       margin: 0;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      text-shadow:
+        0 20px 60px rgba(0,0,0,0.45);
     }
 
     #celebration p {
-      font-size: 1.4rem;
-      margin-top: 10px;
+      margin-top: 14px;
+      font-size: 1.5rem;
+      opacity: 0.95;
+      text-shadow: 0 8px 24px rgba(0,0,0,0.35);
     }
 
-    @keyframes popIn {
+    @keyframes riseIn {
       from {
         opacity: 0;
-        transform: scale(0.8);
+        transform: translateY(40px) scale(0.94);
       }
       to {
         opacity: 1;
-        transform: scale(1);
+        transform: translateY(0) scale(1);
       }
     }
 
-    /* Floating hearts */
+    /* ===== HEARTS ===== */
     .heart {
       position: fixed;
-      bottom: -40px;
-      font-size: 24px;
-      animation: floatUp linear forwards;
-      z-index: 2;
+      bottom: -60px;
+      font-size: 22px;
+      opacity: 0.9;
       pointer-events: none;
+      animation: floatHeart linear forwards;
+      filter: drop-shadow(0 6px 12px rgba(0,0,0,0.25));
     }
 
-    @keyframes floatUp {
+    @keyframes floatHeart {
       from {
-        transform: translateY(0) scale(1);
+        transform: translateY(0) scale(0.9);
+        opacity: 0;
+      }
+      10% {
         opacity: 1;
       }
       to {
-        transform: translateY(-110vh) scale(1.6);
+        transform: translateY(-120vh) scale(1.8);
         opacity: 0;
       }
     }
@@ -163,7 +190,7 @@
   <div id="bg"></div>
 
   <div class="card" id="card">
-    <h1>Version 2.4 Will you be my Valentine? 💖</h1>
+    <h1>Version 2.6 Will you be my Valentine?</h1>
 
     <div class="buttons" id="arena">
       <button id="yesBtn" onclick="yesClicked()">Yes</button>
@@ -172,31 +199,30 @@
   </div>
 
   <div id="celebration">
-    <h2>Yayyy!! 💖</h2>
-    <p>This just made me so happy 🥰</p>
+    <h2>Yayyy 💖</h2>
+    <p>This just made my whole day</p>
   </div>
 
   <script>
     const noBtn = document.getElementById("noBtn");
-    const yesBtn = document.getElementById("yesBtn");
     const arena = document.getElementById("arena");
     const card = document.getElementById("card");
     const bg = document.getElementById("bg");
     const celebration = document.getElementById("celebration");
 
     let x = arena.offsetWidth / 2 - noBtn.offsetWidth / 2;
-    let y = 60;
+    let y = 70;
 
     noBtn.style.left = x + "px";
     noBtn.style.top = y + "px";
 
     function hop() {
-      const step = 80;
+      const step = 90;
       const dx = (Math.random() > 0.5 ? 1 : -1) * step;
       const dy = (Math.random() > 0.5 ? 1 : -1) * step;
 
-      x = Math.max(10, Math.min(x + dx, arena.offsetWidth - noBtn.offsetWidth - 10));
-      y = Math.max(10, Math.min(y + dy, arena.offsetHeight - noBtn.offsetHeight - 10));
+      x = Math.max(12, Math.min(x + dx, arena.offsetWidth - noBtn.offsetWidth - 12));
+      y = Math.max(12, Math.min(y + dy, arena.offsetHeight - noBtn.offsetHeight - 12));
 
       noBtn.style.left = x + "px";
       noBtn.style.top = y + "px";
@@ -213,20 +239,20 @@
         card.style.display = "none";
         celebration.style.display = "block";
         startHearts();
-      }, 600);
+      }, 700);
     }
 
     function startHearts() {
       setInterval(() => {
         const heart = document.createElement("div");
         heart.className = "heart";
-        heart.innerText = "💖";
+        heart.textContent = "💖";
         heart.style.left = Math.random() * 100 + "vw";
-        heart.style.animationDuration = 4 + Math.random() * 3 + "s";
+        heart.style.animationDuration = 5 + Math.random() * 4 + "s";
         document.body.appendChild(heart);
 
-        setTimeout(() => heart.remove(), 7000);
-      }, 300);
+        setTimeout(() => heart.remove(), 9000);
+      }, 260);
     }
   </script>
 
