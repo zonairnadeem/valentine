@@ -138,7 +138,6 @@ html, body { height:100%; width:100%; overflow:hidden; background:#fff0f6; }
 <audio id="song3" src="song3.mp3" preload="auto"></audio>
 
 <script>
-// DOM elements
 const splash = document.getElementById("splash");
 const enterBtn = document.getElementById("enterBtn");
 const card = document.getElementById("card");
@@ -151,18 +150,16 @@ const song1 = document.getElementById("song1");
 const song2 = document.getElementById("song2");
 const song3 = document.getElementById("song3");
 
-// Slideshow images
 const images = ['img1.JPG','img2.JPG','img3.JPG','img4.JPG','img5.JPG','img6.JPG','img7.JPG','img8.JPG','img9.JPG','img10.JPG'];
+
+let current = 0;
 
 // === ENTER BUTTON ===
 enterBtn.addEventListener("click", () => {
-  // Play song2 directly on user gesture
   song2.loop = true;
   song2.volume = 0.5;
-  const p = song2.play();
-  if(p !== undefined) p.catch(e=>console.log("Audio blocked"));
+  song2.play().catch(()=>{}); // play after user gesture
 
-  // Show card
   splash.style.display = "none";
   card.style.display = "flex";
 });
@@ -184,8 +181,10 @@ yesBtn.addEventListener("click", () => {
   card.style.display="none";
   celebration.style.display="flex";
 
-  song1.pause(); song2.pause();
-  song3.currentTime=0; song3.play();
+  song1.pause();
+  song2.pause();
+  song3.currentTime=0;
+  song3.play();
 
   startParticles();
   startSlideshow();
@@ -207,32 +206,22 @@ function startParticles(){
 }
 
 // === SLIDESHOW ===
-let current = 0;
-
-function startSlideshow() {
+function startSlideshow(){
   slideshow.style.zIndex = 1;
   slideshow.style.opacity = 1;
   slideshow.style.backgroundImage = `url(${images[current]})`;
 
-  function nextSlide() {
-    // fade out
+  function nextSlide(){
     slideshow.style.opacity = 0;
-
-    // after fade out (0.5s), change image and fade in
     setTimeout(() => {
       current = (current + 1) % images.length;
       slideshow.style.backgroundImage = `url(${images[current]})`;
       slideshow.style.opacity = 1;
-
-      // show image for 3s then move to next
-      setTimeout(nextSlide, 3000);
-    }, 500); // match CSS fade duration
+      setTimeout(nextSlide, 3000); // show next after 3s
+    }, 500); // match fade duration
   }
 
-  // start the loop after first image is shown for 3s
-  setTimeout(nextSlide, 3000);
-}
-
+  setTimeout(nextSlide, 3000); // first image shows 3s
 }
 </script>
 </body>
