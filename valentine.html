@@ -2,233 +2,184 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Valentine 💖</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>💖</title>
 
 <style>
-* {
-  box-sizing: border-box;
-  font-family: Arial, sans-serif;
-}
+  body {
+    margin: 0;
+    height: 100vh;
+    font-family: Arial, sans-serif;
+    background: #fff0f5;
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 
-body {
-  margin: 0;
-  height: 100vh;
-  background: #fff0f5;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-}
+  .screen {
+    display: none;
+    text-align: center;
+    padding: 20px;
+    max-width: 90%;
+  }
 
-.screen {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  opacity: 0;
-  pointer-events: none;
-}
+  .active {
+    display: block;
+  }
 
-.screen.active {
-  opacity: 1;
-  pointer-events: auto;
-}
+  h1 { margin-bottom: 24px; }
 
-h1 {
-  font-size: 2.2em;
-  margin-bottom: 30px;
-}
+  button {
+    padding: 12px 26px;
+    font-size: 18px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    margin: 10px;
+  }
 
-button {
-  font-size: 1.2em;
-  padding: 12px 28px;
-  border-radius: 25px;
-  border: none;
-  cursor: pointer;
-}
+  #enterBtn { background: #ff69b4; color: white; }
+  #yesBtn   { background: #32cd32; color: white; }
+  #noBtn    { background: #ff4d4d; color: white; position: absolute; }
 
-#enterBtn {
-  background: #ff69b4;
-  color: white;
-}
+  #slideshow {
+    width: 90vw;
+    max-width: 500px;
+    height: 70vh;
+    max-height: 500px;
+    border-radius: 16px;
+    object-fit: cover;
+  }
 
-#buttons {
-  margin-top: 20px;
-  position: relative;
-}
-
-#yesBtn {
-  background: #4CAF50;
-  color: white;
-  margin-right: 40px;
-}
-
-#noBtn {
-  background: #f44336;
-  color: white;
-  position: absolute;
-}
-
-#slideshow {
-  position: absolute;
-  inset: 0;
-  background-size: cover;
-  background-position: center;
-  transition: opacity 0.8s ease-in-out;
-}
-
-/* ❤️ FLOATING HEARTS */
-.heart {
-  position: absolute;
-  bottom: -30px;
-  font-size: 24px;
-  pointer-events: none;
-  animation: floatUp linear forwards;
-  opacity: 0.8;
-}
-
-@keyframes floatUp {
-  0% { transform: translateY(0) scale(1); opacity: 0; }
-  10% { opacity: 1; }
-  100% { transform: translateY(-120vh) scale(1.4); opacity: 0; }
-}
-
-/* 🔁 REPLAY BUTTON */
-#replayBtn {
-  position: absolute;
-  bottom: 30px;
-  background: rgba(0,0,0,0.6);
-  color: white;
-  border: 2px solid white;
-}
+  #replayBtn {
+    background: #555;
+    color: white;
+    margin-top: 20px;
+  }
 </style>
 </head>
 
 <body>
 
-<!-- AUDIO -->
-<audio id="song1" src="song1.mp3"></audio>
-<audio id="song2" src="song2.mp3" loop></audio>
-<audio id="song3" src="song3.mp3" loop></audio>
-
-<!-- SCREEN 1 -->
-<div id="screen1" class="screen active">
+<!-- PAGE 1 -->
+<div id="page1" class="screen active">
   <h1>A little surprise for someone special… 💖</h1>
   <button id="enterBtn">ENTER</button>
 </div>
 
-<!-- SCREEN 2 -->
-<div id="screen2" class="screen">
-  <h1>Will you be my Valentine? 💘</h1>
-  <div id="buttons">
-    <button id="yesBtn">Yes</button>
-    <button id="noBtn">No</button>
-  </div>
+<!-- PAGE 2 -->
+<div id="page2" class="screen">
+  <h1>Will you be my Valentine? 💕</h1>
+  <button id="yesBtn">Yes</button>
+  <button id="noBtn">No</button>
 </div>
 
-<!-- SCREEN 3 -->
-<div id="screen3" class="screen">
-  <div id="slideshow"></div>
-  <button id="replayBtn">Replay 🔁</button>
+<!-- PAGE 3 -->
+<div id="page3" class="screen">
+  <img id="slideshow" src="img1.jpg">
+  <br>
+  <button id="replayBtn">Replay</button>
 </div>
+
+<!-- AUDIO (SEPARATED & CONTROLLED) -->
+<audio id="song1" src="song1.mp3"></audio>
+<audio id="song2" src="song2.mp3" loop></audio>
+<audio id="song3" src="song3.mp3"></audio>
 
 <script>
-const screen1 = document.getElementById("screen1");
-const screen2 = document.getElementById("screen2");
-const screen3 = document.getElementById("screen3");
+  const page1 = document.getElementById("page1");
+  const page2 = document.getElementById("page2");
+  const page3 = document.getElementById("page3");
 
-const enterBtn = document.getElementById("enterBtn");
-const yesBtn = document.getElementById("yesBtn");
-const noBtn = document.getElementById("noBtn");
-const replayBtn = document.getElementById("replayBtn");
+  const enterBtn = document.getElementById("enterBtn");
+  const yesBtn = document.getElementById("yesBtn");
+  const noBtn = document.getElementById("noBtn");
+  const replayBtn = document.getElementById("replayBtn");
 
-const song1 = document.getElementById("song1");
-const song2 = document.getElementById("song2");
-const song3 = document.getElementById("song3");
+  const song1 = document.getElementById("song1");
+  const song2 = document.getElementById("song2");
+  const song3 = document.getElementById("song3");
 
-const slideshow = document.getElementById("slideshow");
+  const slideshow = document.getElementById("slideshow");
 
-// initial NO position
-noBtn.style.left = "120px";
-noBtn.style.top = "0px";
+  let slideIndex = 1;
+  let slideTimer;
 
-function show(from, to) {
-  from.classList.remove("active");
-  to.classList.add("active");
-}
+  function show(page) {
+    page1.classList.remove("active");
+    page2.classList.remove("active");
+    page3.classList.remove("active");
+    page.classList.add("active");
+  }
 
-// ENTER
-enterBtn.onclick = () => {
-  show(screen1, screen2);
-  song2.volume = 0.6;
-  song2.play();
-};
+  /* ENTER */
+  enterBtn.onclick = () => {
+    show(page2);
+    song2.currentTime = 0;
+    song2.volume = 0.6;
+    song2.play().catch(()=>{});
+    positionNo();
+  };
 
-// NO hop
-function hop() {
-  song1.currentTime = 0;
-  song1.play();
+  /* YES */
+  yesBtn.onclick = () => {
+    song2.pause();
+    song1.pause();
 
-  const maxX = 160;
-  const maxY = 80;
+    song3.currentTime = 0;
+    song3.volume = 1;
+    song3.play().catch(()=>{});
 
-  noBtn.style.left = Math.random() * maxX + "px";
-  noBtn.style.top = Math.random() * maxY + "px";
-}
+    show(page3);
+    startSlideshow();
+  };
 
-noBtn.addEventListener("mouseenter", hop);
-noBtn.addEventListener("touchstart", hop);
+  /* NO */
+  function hopNo() {
+    document.body.style.backgroundImage = "url('no-bg.jpeg')";
 
-// YES
-yesBtn.onclick = () => {
-  show(screen2, screen3);
-  song2.pause();
-  song3.volume = 0.7;
-  song3.play();
-  startSlideshow();
-  startHearts();
-};
+    song1.currentTime = 0;
+    song1.play().catch(()=>{});
 
-// 🔁 REPLAY
-replayBtn.onclick = () => {
-  location.reload();
-};
+    const padding = 20;
+    const maxX = window.innerWidth - noBtn.offsetWidth - padding;
+    const maxY = window.innerHeight - noBtn.offsetHeight - padding;
 
-// SLIDESHOW
-const images = [ 'img1.jpeg','img2.jpeg','img3.jpeg','img4.jpeg','img5.jpeg','img6.jpeg','img7.jpeg','img8.jpeg','img9.jpeg','img10.jpeg','img11.jpeg','img12.jpeg' ];
+    noBtn.style.left = Math.random() * maxX + "px";
+    noBtn.style.top  = Math.random() * maxY + "px";
+  }
 
-let index = 0;
+  noBtn.addEventListener("mouseenter", hopNo);
+  noBtn.addEventListener("touchstart", hopNo);
 
-function startSlideshow() {
-  slideshow.style.backgroundImage = `url(${images[index]})`;
+  function positionNo() {
+    noBtn.style.left = "65%";
+    noBtn.style.top = "60%";
+  }
 
-  setInterval(() => {
-    slideshow.style.opacity = 0;
-    setTimeout(() => {
-      index = (index + 1) % images.length;
-      slideshow.style.backgroundImage = `url(${images[index]})`;
-      slideshow.style.opacity = 1;
-    }, 800);
-  }, 3000);
-}
+  /* SLIDESHOW */
+  function startSlideshow() {
+    clearInterval(slideTimer);
+    slideIndex = 1;
+    slideshow.src = `img${slideIndex}.jpeg`;
 
-// ❤️ HEARTS
-function startHearts() {
-  setInterval(() => {
-    const heart = document.createElement("div");
-    heart.className = "heart";
-    heart.textContent = "💖";
-    heart.style.left = Math.random() * 100 + "vw";
-    heart.style.fontSize = 18 + Math.random() * 22 + "px";
-    heart.style.animationDuration = 6 + Math.random() * 4 + "s";
-    document.body.appendChild(heart);
-    setTimeout(() => heart.remove(), 10000);
-  }, 400);
-}
+    slideTimer = setInterval(() => {
+      slideIndex++;
+      slideshow.src = `img${slideIndex}.jpeg`;
+    }, 3000);
+  }
+
+  /* REPLAY */
+  replayBtn.onclick = () => {
+    clearInterval(slideTimer);
+    song1.pause();
+    song2.pause();
+    song3.pause();
+    document.body.style.backgroundImage = "";
+    show(page1);
+  };
 </script>
 
 </body>
