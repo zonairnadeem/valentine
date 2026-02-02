@@ -199,15 +199,11 @@ function startSlideshow(){
 
   setInterval(()=>{
     current = (current+1) % images.length;
-    const nextImage = new Image();
-    nextImage.src = images[current];
-    nextImage.onload = ()=>{
-      slideshow.style.opacity=0;
-      setTimeout(()=>{
-        slideshow.style.backgroundImage=`url(${images[current]})`;
-        slideshow.style.opacity=1;
-      },500); // fade transition
-    };
+    slideshow.style.opacity=0;
+    setTimeout(()=>{
+      slideshow.style.backgroundImage=`url(${images[current]})`;
+      slideshow.style.opacity=1;
+    },500); // fade transition
   }, 3000); // 3 seconds per image
 }
 </script>
